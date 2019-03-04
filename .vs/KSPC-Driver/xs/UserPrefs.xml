@@ -1,10 +1,17 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="KSPC-Driver/src/Enums.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="KSPC-Driver/src/KSPBridge/KSPStateMachine.cs">
     <Files>
-      <File FileName="KSPC-Driver/main.cs" Line="21" Column="1" />
+      <File FileName="KSPC-Driver/main.cs" Line="48" Column="13" />
       <File FileName="KSPC-Driver/Properties/AssemblyInfo.cs" Line="1" Column="1" />
-      <File FileName="KSPC-Driver/src/Enums.cs" Line="4" Column="1" />
-      <File FileName="KSPC-Driver/src/Settings.cs" Line="22" Column="9" />
+      <File FileName="KSPC-Driver/src/Enums.cs" Line="1" Column="14" />
+      <File FileName="KSPC-Driver/src/Settings.cs" Line="6" Column="21" />
+      <File FileName="KSPC-Driver/src/KSPBridge.cs" Line="22" Column="18" />
+      <File FileName="KSPC-Driver/src/Serial/SerialPort.cs" Line="61" Column="8" />
+      <File FileName="KSPC-Driver/src/Utils.cs" Line="7" Column="23" />
+      <File FileName="KSPC-Driver/src/Serial/SerialController.cs" Line="20" Column="22" />
+      <File FileName="KSPC-Driver/src/Serial/SerialPortWorker.cs" Line="52" Column="39" />
+      <File FileName="KSPC-Driver/src/Definitions.cs" Line="6" Column="44" />
+      <File FileName="KSPC-Driver/src/KSPBridge/KSPStateMachine.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -14,7 +21,10 @@
               <Node name="References" expanded="True" />
               <Node name="Properties" expanded="True" />
               <Node name="src" expanded="True">
-                <Node name="Enums.cs" selected="True" />
+                <Node name="KSPBridge" expanded="True">
+                  <Node name="KSPStateMachine.cs" selected="True" />
+                </Node>
+                <Node name="Serial" expanded="True" />
               </Node>
             </Node>
           </Node>

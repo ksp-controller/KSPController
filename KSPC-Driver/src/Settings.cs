@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using KSP.IO;
 using UnityEngine;
 using KSP.UI.Screens;
-namespace KSPCDriver.Settings
+namespace KSPCDriver
 {
     [KSPAddon(KSPAddon.Startup.MainMenu, false)]
     public class KSPCSettings : MonoBehaviour

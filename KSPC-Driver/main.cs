@@ -12,9 +12,11 @@ using KSP.IO;
 using UnityEngine;
 using KSP.UI.Screens;
 //
-using KSPCDriver.Settings;
-using KSPCDriver.Enums;
 using KSPCDriver.Serial;
+
+using KSPCDriver.Enums;
+using KSPCDriver.Utils;
+using KSPCDriver.KSPBridge;
 
 namespace KSPCDriver
 {
@@ -28,78 +30,24 @@ namespace KSPCDriver
         private double missionTimeOld = 0;
         private double theTime = 0;
 
-        public double refreshrate = 1.0f;
         public static Vessel ActiveVessel = new Vessel();
-
         public Guid VesselIDOld;
-
         IOResource TempR = new IOResource();
-        private ScreenMessageStyle KSPIOScreenStyle = ScreenMessageStyle.UPPER_RIGHT;
 
-        void Awake()
-        {
-            ScreenMessages.PostScreenMessage("IO awake", 10f, KSPIOScreenStyle);
-            refreshrate = KSPCSettings.refreshrate;
+
+        private KSPStateMachine _state;
+        private SerialController _serialController;
+
+
+        void Awake() { 
+            Utils.PrintScreenMessage("KSPCDriver is awake");
         }
 
         void Start()
         {
-            if (KSPCSerialPort.DisplayFound)
-            {
-                if (!KSPCSerialPort.Port.IsOpen)
-                {
-                    ScreenMessages.PostScreenMessage("Starting serial port " + KSPCSerialPort.Port.PortName, 10f, KSPIOScreenStyle);
+            _state = new KSPStateMachine();
+            _serialController = new SerialController();
 
-                    try
-                    {
-                        KSPCSerialPort.Port.Open();
-                        Thread.Sleep(KSPCSettings.HandshakeDelay);
-                    }
-                    catch (Exception e)
-                    {
-                        ScreenMessages.PostScreenMessage("Error opening serial port " + KSPCSerialPort.Port.PortName, 10f, KSPIOScreenStyle);
-                        ScreenMessages.PostScreenMessage(e.Message, 10f, KSPIOScreenStyle);
-                    }
-                }
-                else
-                {
-                    ScreenMessages.PostScreenMessage("Using serial port " + KSPCSerialPort.Port.PortName, 10f, KSPIOScreenStyle);
-
-                    if (KSPCSettings.HandshakeDisable == 1)
-                        ScreenMessages.PostScreenMessage("Handshake disabled");
-                }
-
-                Thread.Sleep(200);
-
-                ActiveVessel.OnPostAutopilotUpdate -= AxisInput;
-                ActiveVessel = FlightGlobals.ActiveVessel;
-                ActiveVessel.OnPostAutopilotUpdate += AxisInput;
-
-                //sync inputs at start
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.RCS, KSPCSerialPort.VControls.RCS);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, KSPCSerialPort.VControls.SAS);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Light, KSPCSerialPort.VControls.Lights);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Gear, KSPCSerialPort.VControls.Gear);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, KSPCSerialPort.VControls.Brakes);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Abort, KSPCSerialPort.VControls.Abort);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Stage, KSPCSerialPort.VControls.Stage);
-
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom01, KSPCSerialPort.VControls.ControlGroup[1]);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom02, KSPCSerialPort.VControls.ControlGroup[2]);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom03, KSPCSerialPort.VControls.ControlGroup[3]);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom04, KSPCSerialPort.VControls.ControlGroup[4]);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom05, KSPCSerialPort.VControls.ControlGroup[5]);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom06, KSPCSerialPort.VControls.ControlGroup[6]);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom07, KSPCSerialPort.VControls.ControlGroup[7]);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom08, KSPCSerialPort.VControls.ControlGroup[8]);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom09, KSPCSerialPort.VControls.ControlGroup[9]);
-                ActiveVessel.ActionGroups.SetGroup(KSPActionGroup.Custom10, KSPCSerialPort.VControls.ControlGroup[10]);
-
-            }
-            else
-            {
-                ScreenMessages.PostScreenMessage("KerbalController not found", 10f, KSPIOScreenStyle);
-            }
         }
 
         void Update()

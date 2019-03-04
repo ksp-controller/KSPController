@@ -56,10 +56,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Enums.cs" />
     <Compile Include="src\Settings.cs" />
-    <Compile Include="src\SerialPort.cs" />
+    <Compile Include="src\KSPBridge.cs" />
+    <Compile Include="src\Utils.cs" />
+    <Compile Include="src\Serial\SerialController.cs" />
+    <Compile Include="src\Serial\SerialPort.cs" />
+    <Compile Include="src\Serial\SerialPortWorker.cs" />
+    <Compile Include="src\Definitions.cs" />
+    <Compile Include="src\KSPBridge\KSPStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />
+    <Folder Include="src\Serial\" />
+    <Folder Include="src\KSPBridge\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
