@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 
-namespace KSPCDriver.Enums
+namespace KSPCDriver
 {
     #region Structs
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -46,7 +46,6 @@ namespace KSPCDriver.Enums
         public float OxidizerTotS;  //36
         public float OxidizerS;     //37
         public UInt32 MissionTime;  //38
-        public float deltaTime;     //39
         public float VOrbit;        //40
         public UInt32 MNTime;       //41
         public float MNDeltaV;      //42
@@ -70,43 +69,14 @@ namespace KSPCDriver.Enums
         // Last 4 bits set navball mode. (0=ignore,1=ORBIT,2=SURFACE,3=TARGET)
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct HandShakePacket
-    {
-        public byte id;
-        public byte M1;
-        public byte M2;
-        public byte M3;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct ControlPacket
-    {
-        public byte id;
-        public byte MainControls;                  //SAS RCS Lights Gear Brakes Precision Abort Stage 
-        public byte Mode;                          //0 = stage, 1 = docking, 2 = map
-        public ushort ControlGroup;                //control groups 1-10 in 2 bytes
-        public byte NavballSASMode;                //AutoPilot mode (See above for AutoPilot modes)(Ignored if the equal to zero or out of bounds (>10)) //Navball mode
-        public byte AdditionalControlByte1;
-        public short Pitch;                        //-1000 -> 1000
-        public short Roll;                         //-1000 -> 1000
-        public short Yaw;                          //-1000 -> 1000
-        public short TX;                           //-1000 -> 1000
-        public short TY;                           //-1000 -> 1000
-        public short TZ;                           //-1000 -> 1000
-        public short WheelSteer;                   //-1000 -> 1000
-        public short Throttle;                     // 0 -> 1000
-        public short WheelThrottle;                // 0 -> 1000
-    };
-
+  
     public struct VesselControls
     {
         public Boolean SAS;
         public Boolean RCS;
-        public Boolean Lights;
+        public Boolean Light;
         public Boolean Gear;
         public Boolean Brakes;
-        public Boolean Precision;
         public Boolean Abort;
         public Boolean Stage;
         public int Mode;
@@ -132,23 +102,4 @@ namespace KSPCDriver.Enums
 
     #endregion
 
-    enum enumAG : int
-    {
-        SAS,
-        RCS,
-        Light,
-        Gear,
-        Brakes,
-        Abort,
-        Custom01,
-        Custom02,
-        Custom03,
-        Custom04,
-        Custom05,
-        Custom06,
-        Custom07,
-        Custom08,
-        Custom09,
-        Custom10,
-    };
 }

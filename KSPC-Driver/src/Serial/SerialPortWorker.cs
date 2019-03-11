@@ -1,112 +1,104 @@
 ﻿using System;
 using System.Threading;
 using KSPCDriver;
+using System.IO;
 
 namespace KSPCDriver.Serial
 {
-    internal enum SerialPacket : byte
-    {
-        ACK, //ACK FLAG
-        VERIFIER, // VERIFIER
-        SIZE,// SIZE
-        PAYLOAD, // PAYLOAD
-        CHECKSUM, // CHECKSUM
-        NONE // INAVLID
-    }
-
     public class SerialPortWorker
     {
         public bool keepAlive;
+        private Stream _stream; //read stream
         private Thread _thread; //com thread
-        private Stream _inStream; //read stream
-        private SerialPacket _readState; //current packet read state
-        public SerialPortThread(Stream _readStream)
+        //read
+        private Mutex _controllerPacketMutex; //in packet access mutex
+        private SerialPacketControl _lastControllerPacket;
+        //write
+        private Mutex _sendPacketMutex; //out packet access mutex
+        private SerialPacketData _sendData; //data to be sent
+        public SerialPortWorker(Stream stream)
         {
             this.keepAlive = true;
-            inStream = _readStream;
+            _stream = stream;
+            _sendPacketMutex = new Mutex();
+            _controllerPacketMutex = new Mutex();
             _thread = new Thread(_run);
             _thread.Start();
         }
+        public void stop()
+        {
+            if (_thread == null) return;
+            _thread.Interrupt();
+            _thread = null;
+        }
+        public object getLastControlRead()
+        {
+            object tmpRetValue;
+            this._controllerPacketMutex.WaitOne();
+            tmpRetValue = _lastControllerPacket.parsedData();
+            this._controllerPacketMutex.ReleaseMutex();
+            return tmpRetValue;
+        }
+        public void setSendData(SerialPacketData data)
+        {
+            _sendPacketMutex.WaitOne();
+            _sendData = data;
+            _sendPacketMutex.ReleaseMutex();
+        }
+
         private void _run()
         {
-            Utils.PrintScreenMessage("Serial thread started!");
-            byte[] buffer = new byte[PAYLOAD_SIZE + 4];
-            Action reader = delegate {
-                try {
-                    this._inStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult _result) {
-                      try {
-                            int packetLenght = this._inStream.EndRead(_result);
-                            byte[] localCopy = new byte[packetLenght];
-                            //copy into local copy
-                            Buffer.BlockCopy(buffer, 0, localCopy, 0, packetLenght);
-                            //handle packet
-                            this._handleNewPacket(localCopy, packetLenght);
-                      } catch (IOException execption) {
-                            Utils.PrintScreenMessage("Exception in reading data " + exeception.ToString());
-                        }
-                    }, null);
-                } catch (InvalidOperationException execption) {
-                    Utils.PrintScreenMessage("Exception on opening read buffer " + execption.ToString());
-                    Thread.Sleep(500);
-                }
-            };
-            //keep reading til flag says to stop
-            while (this.keepAlive) reader();
-            Utils.PrintScreenMessage("Serial thread is shutting down!");
-        }
-        private void _handleNewPacket(byte[] ReadBuffer, int BufferLength)
-        {
-            for (int x = 0; x < BufferLength; x++) 
+            Utils.PrintScreenMessage("Serial thread is running..");
+            while (this.keepAlive)
             {
-                switch (this._readState)
-                {
-                    case ReceiveStates.FIRSTHEADER:
-                        if (ReadBuffer[x] == 0xBE)
+                this._receivePacket();
+                this._sendPacket();
+            }
+            Utils.PrintScreenMessage("Serial thread is shutting down..");
+        }
+        private void _receivePacket()
+        {
+            try
+            {
+                byte[] buffer = new byte[Definitions.MAX_PACKET_SIZE + 4]; //+4 for ack, verrifier, checksum and size
+                this._stream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult _result) {
+                    try
+                    {
+                        int packetLenght = this._stream.EndRead(_result);
+                        byte[] localCopy = new byte[packetLenght];
+                        //copy into local copy
+                        Buffer.BlockCopy(buffer, 0, localCopy, 0, packetLenght);
+                        //try to get packet
+                        SerialPacketControl tmpPacket = new SerialPacketControl(localCopy, packetLenght);
+                        if (tmpPacket.isValid())
                         {
-                            CurrentState = ReceiveStates.SECONDHEADER;
+                            this._controllerPacketMutex.WaitOne();
+                            this._lastControllerPacket = tmpPacket;
+                            this._controllerPacketMutex.ReleaseMutex();
                         }
-                        break;
-                    case ReceiveStates.SECONDHEADER:
-                        if (ReadBuffer[x] == 0xEF)
-                        {
-                            CurrentState = ReceiveStates.SIZE;
-                        }
-                        else
-                        {
-                            CurrentState = ReceiveStates.FIRSTHEADER;
-                        }
-                        break;
-                    case ReceiveStates.SIZE:
-                        CurrentPacketLength = ReadBuffer[x];
-                        CurrentBytesRead = 0;
-                        CurrentState = ReceiveStates.PAYLOAD;
-                        break;
-                    case ReceiveStates.PAYLOAD:
-                        PayloadBuffer[CurrentBytesRead] = ReadBuffer[x];
-                        CurrentBytesRead++;
-                        if (CurrentBytesRead == CurrentPacketLength)
-                        {
-                            CurrentState = ReceiveStates.CS;
-                        }
-                        break;
-                    case ReceiveStates.CS:
-                        if (CompareChecksum(ReadBuffer[x]))
-                        {
-                            SerialMutex.WaitOne();
-                            Buffer.BlockCopy(PayloadBuffer, 0, NewPacketBuffer, 0, CurrentBytesRead);
-                            NewPacketFlag = true;
-                            SerialMutex.ReleaseMutex();
-                            // Seedy hack: Handshake happens during scene
-                            // load before Update() is ever called
-                            if (!DisplayFound)
-                            {
-                                InboundPacketHandler();
-                            }
-                        }
-                        CurrentState = ReceiveStates.FIRSTHEADER;
-                        break;
-                }
+                    }
+                    catch (IOException execption)
+                    {
+                        Utils.PrintScreenMessage("Exception in reading data " + execption.ToString());
+                    }
+                }, null);
+            }
+            catch (InvalidOperationException execption)
+            {
+                Utils.PrintScreenMessage("Exception on opening read buffer " + execption.ToString());
+                Thread.Sleep(500);
             }
         }
+        private void _sendPacket()
+        {
+            _sendPacketMutex.WaitOne();
+            if (this._sendData != null)
+            {
+                this._stream.Write(_sendData.getData(), 0, _sendData.getDataLength());
+                this._sendData = null; //mark data as sent!
+            }
+            _sendPacketMutex.ReleaseMutex();
+        }
+
     }
 }

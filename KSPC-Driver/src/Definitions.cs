@@ -1,9 +1,11 @@
 ﻿using System;
 namespace KSPCDriver
 {
-    public interface Definitions
+    static class Definitions
     {
-        public const int PACKET_SIZE = 255;
+        public const int MAX_PACKET_SIZE = 255;
         public const int CONTROL_GROUP_COUNT = 11;
+        public const byte PACKET_ACK = 0xAE;
+        public const byte PACKET_VERIFIER = 0xEE;
     }
 }

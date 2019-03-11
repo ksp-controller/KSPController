@@ -1,5 +1,4 @@
 ﻿using System;
-using KSPCDriver.Utils;
 using KSPCDriver.Serial;
 
 namespace KSPCDriver.Serial
@@ -22,16 +21,29 @@ namespace KSPCDriver.Serial
             //try to initialize port with specified tty
             if ((_currentConnection = new SerialPort(controllerTTY)) == null) {
                 //try to establish connection
-                if (_currentConnection.open()) Utils.PrintScreenMessage("Connection established with controller at " + controllerTTY);
+                if (_currentConnection.isPortOpen()) Utils.PrintScreenMessage("Connection established with controller at " + controllerTTY);
                 else Utils.PrintScreenMessage("Connection FAIL to be established with controller at " + controllerTTY);
             }
             else Utils.PrintScreenMessage("Cant find controller.");
         }
-
-
-        public Boolean isCommunicationAvailable()
+        public void sendVesselData(object vData)
         {
-
+            if (vData != null)
+            {
+                this._currentConnection.sendData((VesselData)vData);
+            }
+        }
+        public void close()
+        {
+            if (this.isCommunicationAvailable())
+            {
+                this._currentConnection.close();
+                Utils.PrintScreenMessage("Closing port with controller at " + this._getControllerTTY());
+            }
+        }
+        public bool isCommunicationAvailable()
+        {
+            return (this._currentConnection != null && this._currentConnection.isPortOpen());
         }
     }
 }

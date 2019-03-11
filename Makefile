@@ -2,23 +2,23 @@ export PATH := /usr/local/bin:$(PATH)
 XBUILD=xbuild
 CONFIG=Release
 
-KSPDIR=/Users/hugo/Local\ Files/KSP/MyMOD/
-INSTALLDIR=$(KSPDIR)/GameData/KSPSerialIO
-CONFIGDIR=$(INSTALLDIR)/PluginData/KSPSerialIO
+KSPDIR=/Users/gwdp/Library/Application\ Support/Steam/steamapps/common/Kerbal\ Space\ Program
+INSTALLDIR=$(KSPDIR)/GameData/KSPC-Driver
+CONFIGDIR=$(INSTALLDIR)/PluginData/KSPC-Driver
 
-PLUGINVERSION=$(shell egrep "^\[.*AssemblyVersion" KSPSerialIO/Properties/AssemblyInfo.cs|cut -d\" -f2)
-PACKAGEDIR=package/KSPSerialIO
-PACKAGECONFIGDIR=$(PACKAGEDIR)/PluginData/KSPSerialIO
+PLUGINVERSION=$(shell egrep "^\[.*AssemblyVersion" KSPC-Driver/Properties/AssemblyInfo.cs|cut -d\" -f2)
+PACKAGEDIR=package/KSPC-Driver
+PACKAGECONFIGDIR=$(PACKAGEDIR)/PluginData/KSPC-Driver
 
-all: KSPSerial.dll
+all: dll
 
-KSPSerial.dll:
+dll:
 	$(XBUILD) /p:Configuration=$(CONFIG)
 
 install:
-	cp KSPSerialIO/bin/$(CONFIG)/KSPSerialIO.dll $(INSTALLDIR)
-	cp KSPSerialIO/bin/$(CONFIG)/PsimaxSerial.dll $(INSTALLDIR)
-	#cp ../PsiMaxSerial/PsiMaxSerial/Release/Mono.Posix.dll $(INSTALLDIR)
+	[ -d $(CONFIGDIR) ] || mkdir -p $(CONFIGDIR)
+	cp KSPC-Driver/bin/$(CONFIG)/KSPC-Driver.dll $(INSTALLDIR)
+	cp KSPC-Driver/bin/$(CONFIG)/PsimaxSerial.dll $(INSTALLDIR)
 	cp config.xml $(CONFIGDIR)
 
 clean:
@@ -26,12 +26,10 @@ clean:
 
 package: all
 	mkdir -p $(PACKAGECONFIGDIR)
-	cp KSPSerialIO/bin/$(CONFIG)/KSPSerialIO.dll $(PACKAGEDIR)
-	cp KSPSerialIO/bin/$(CONFIG)/PsimaxSerial.dll $(PACKAGEDIR)
-	#cp ../PsimaxSerial/PsimaxSerial/bin/Release/Mono.Posix.dll $(PACKAGEDIR)
+	cp KSPC-Driver/bin/$(CONFIG)/KSPC-Driver.dll $(PACKAGEDIR)
+	cp KSPC-Driver/bin/$(CONFIG)/PsimaxSerial.dll $(PACKAGEDIR)
 	cp config.xml $(PACKAGECONFIGDIR)
-	cd package; zip -r -9 ../KSPSerialIO-cross-$(PLUGINVERSION).zip KSPSerialIO
+	cd package; zip -r -9 ../KSPC-Driver-cross-$(PLUGINVERSION).zip KSPC-Driver
 	rm -r package
-	echo $(PLUGINVERSION) > KSPSerialIO.version
-
+	echo $(PLUGINVERSION) > KSPC-Driver.version
 

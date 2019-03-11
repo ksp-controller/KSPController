@@ -56,13 +56,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Enums.cs" />
     <Compile Include="src\Settings.cs" />
-    <Compile Include="src\KSPBridge.cs" />
     <Compile Include="src\Utils.cs" />
     <Compile Include="src\Serial\SerialController.cs" />
     <Compile Include="src\Serial\SerialPort.cs" />
     <Compile Include="src\Serial\SerialPortWorker.cs" />
     <Compile Include="src\Definitions.cs" />
     <Compile Include="src\KSPBridge\KSPStateMachine.cs" />
+    <Compile Include="src\Serial\SerialPacket.cs" />
+    <Compile Include="src\KSPBridge\KSPVesselBridge.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />
