@@ -19,7 +19,8 @@ namespace KSPCDriver.Serial
             Utils.PrintScreenMessage("Starting serial communication..");
             string controllerTTY = this._getControllerTTY();
             //try to initialize port with specified tty
-            if ((_currentConnection = new SerialPort(controllerTTY)) == null) {
+            _currentConnection = new SerialPort(controllerTTY);
+            if (_currentConnection != null) {
                 //try to establish connection
                 if (_currentConnection.isPortOpen()) Utils.PrintScreenMessage("Connection established with controller at " + controllerTTY);
                 else Utils.PrintScreenMessage("Connection FAIL to be established with controller at " + controllerTTY);

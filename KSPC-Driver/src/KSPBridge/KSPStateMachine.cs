@@ -44,6 +44,10 @@ namespace KSPCDriver.KSPBridge
 
                 if (_lastVesselRead != null) _inputUpdated = true;
             }
+            if (_validVessel)
+            {
+                _kspCurrentVesselData = KSPVesselBridge.GetVesselData(_kspCurrentVessel);
+            }
         }
 
         public void _updateControllerInputOnVessel()
@@ -52,10 +56,6 @@ namespace KSPCDriver.KSPBridge
             {
                 KSPVesselBridge.SetControllerOnVessel((VesselControls)_lastVesselRead, (VesselControls)_previousVesselRead, _kspCurrentVessel);
                 _inputUpdated = false;
-            }
-            if (_validVessel)
-            {
-                _kspCurrentVesselData = KSPVesselBridge.GetVesselData(_kspCurrentVessel);
             }
         }
         public void _updateControllerInputOnVesselCallback(FlightCtrlState s)
