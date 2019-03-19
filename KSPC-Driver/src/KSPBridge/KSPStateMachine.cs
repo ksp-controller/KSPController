@@ -35,6 +35,7 @@ namespace KSPCDriver.KSPBridge
         {
             if (_kspCurrentVessel.id != FlightGlobals.ActiveVessel.id)
             {
+                Utils.PrintScreenMessage("Vessel change detected!");
                 //remove callback from previous vessel
                 _kspCurrentVessel.OnPostAutopilotUpdate -= _updateControllerInputOnVesselCallback;
                 //set new vessel
@@ -52,15 +53,15 @@ namespace KSPCDriver.KSPBridge
 
         public void _updateControllerInputOnVessel()
         {
-            if (_lastVesselRead != null && _inputUpdated && _validVessel)
-            {
-                KSPVesselBridge.SetControllerOnVessel((VesselControls)_lastVesselRead, (VesselControls)_previousVesselRead, _kspCurrentVessel);
-                _inputUpdated = false;
-            }
+            //if (_lastVesselRead != null && _inputUpdated && _validVessel)
+            //{
+            //    KSPVesselBridge.SetControllerOnVessel((VesselControls)_lastVesselRead, (VesselControls)_previousVesselRead, _kspCurrentVessel);
+            //    _inputUpdated = false;
+            //}
         }
         public void _updateControllerInputOnVesselCallback(FlightCtrlState s)
         {
-            KSPVesselBridge.FillVesselStateWithController(s, (VesselControls)_lastVesselRead);
+            //KSPVesselBridge.FillVesselStateWithController(s, (VesselControls)_lastVesselRead);
         }
     }
 }

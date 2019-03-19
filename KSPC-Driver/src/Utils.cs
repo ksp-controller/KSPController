@@ -9,15 +9,20 @@ namespace KSPCDriver
 {
     public class Utils
     {
-        private static ScreenMessageStyle DEFAULTMESSAGETYPE = ScreenMessageStyle.UPPER_RIGHT;
-
         public static void PrintScreenMessage(string message)
         {
-            ScreenMessages.PostScreenMessage(message, 10f, DEFAULTMESSAGETYPE);
+            Debug.Log("[KSPCDriver] " + message);
+            try
+            {
+                ScreenMessages.PostScreenMessage(message, 10f, ScreenMessageStyle.UPPER_RIGHT);
+            } catch (Exception e)
+            {
+                Debug.Log("[KSPCDriver] excp when printing message: " + e.ToString());
+            }
         }
         public static void PrintDebugMessage(string message)
         {
-            Debug.Log(message);
+            Debug.Log("[KSPCDriver] " + message);
         }
 
 

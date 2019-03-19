@@ -89,8 +89,21 @@ namespace KSPCDriver.KSPBridge
             _data.Pitch = (float)((attitude.eulerAngles.x > 180) ? (360.0 - attitude.eulerAngles.x) : -attitude.eulerAngles.x);
             _data.Heading = (float)attitude.eulerAngles.y;
 
-            //_data.ControlStatus((int)enumAG.SAS, vessel.ActionGroups[KSPActionGroup.SAS]);
-            //_data.ControlStatus((int)enumAG.RCS, vessel.ActionGroups[KSPActionGroup.RCS]);
+            if (vessel.ActionGroups[KSPActionGroup.SAS])
+            {
+                _data.ActionGroups = (ushort)11111;
+            }
+            else
+            {
+                _data.ActionGroups = (ushort)00000;
+            }
+
+            KSPVesselBridge.SetControlStatus(_data, 0, vessel.ActionGroups[KSPActionGroup.SAS]);
+            KSPVesselBridge.SetControlStatus(_data, 1, vessel.ActionGroups[KSPActionGroup.RCS]);
+
+            //_data.ActionGroups |= (UInt16)(1 << 1);
+            //(ushort)(vessel.ActionGroups[KSPActionGroup.RCS] ? 111111 : 000000);
+            //_data.ActionGroups <& vessel.ActionGroups[KSPActionGroup.RCS];
             //_data.ControlStatus((int)enumAG.Light, vessel.ActionGroups[KSPActionGroup.Light]);
             //_data.ControlStatus((int)enumAG.Gear, vessel.ActionGroups[KSPActionGroup.Gear]);
             //_data.ControlStatus((int)enumAG.Brakes, vessel.ActionGroups[KSPActionGroup.Brakes]);
@@ -137,6 +150,13 @@ namespace KSPCDriver.KSPBridge
             }
 
             return _data;
+        }
+        public static void SetControlStatus(VesselData data, int n, Boolean s)
+        {
+            if (s)
+                data.ActionGroups |= (UInt16)(1 << n);       // forces nth bit of x to be 1.  all other bits left alone.
+            else
+                data.ActionGroups &= (UInt16)~(1 << n);      // forces nth bit of x to be 0.  all other bits left alone.
         }
         public static void SetControllerOnVessel(VesselControls controls, VesselControls previousControls, Vessel vessel)
         {

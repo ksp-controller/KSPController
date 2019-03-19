@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-  <string name="DefaultPort">/dev/cu.usbmodem30</string>
-  <int name="BaudRate">38400</int>
+  <string name="DefaultPort">/dev/cu.usbmodem141101</string>
+  <int name="BaudRate">9600</int>
   <bool name="ThrottleEnable">true</bool>
   <bool name="PitchEnable">true</bool>
   <bool name="RollEnable">true</bool>

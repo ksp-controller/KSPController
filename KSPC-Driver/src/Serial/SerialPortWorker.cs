@@ -9,27 +9,34 @@ namespace KSPCDriver.Serial
     {
         public bool keepAlive;
         private Stream _stream; //read stream
-        private Thread _thread; //com thread
         //read
         private Mutex _controllerPacketMutex; //in packet access mutex
         private SerialPacketControl _lastControllerPacket;
+        private Thread _inThread; //com thread
         //write
         private Mutex _sendPacketMutex; //out packet access mutex
         private SerialPacketData _sendData; //data to be sent
+        private Thread _outThread;//
         public SerialPortWorker(Stream stream)
         {
             this.keepAlive = true;
             _stream = stream;
             _sendPacketMutex = new Mutex();
             _controllerPacketMutex = new Mutex();
-            _thread = new Thread(_run);
-            _thread.Start();
+            _inThread = new Thread(new ThreadStart(_runReceive));
+            _outThread = new Thread(new ThreadStart(_runSend));
+            _outThread.Start();
+            _inThread.Start();
         }
         public void stop()
         {
-            if (_thread == null) return;
-            _thread.Interrupt();
-            _thread = null;
+            Utils.PrintDebugMessage("Stopping worker..");
+            if (_inThread == null) return;
+            this.keepAlive = false;
+            _inThread.Interrupt();
+            _inThread = null;
+            _outThread.Interrupt();
+            _outThread = null;
         }
         public object getLastControlRead()
         {
@@ -41,21 +48,23 @@ namespace KSPCDriver.Serial
         }
         public void setSendData(SerialPacketData data)
         {
-            _sendPacketMutex.WaitOne();
-            _sendData = data;
-            _sendPacketMutex.ReleaseMutex();
+            this._sendPacketMutex.WaitOne();
+            this._sendData = data;
+            this._sendPacketMutex.ReleaseMutex();
         }
-
-        private void _run()
+        private void _runSend()
         {
-            Utils.PrintScreenMessage("Serial thread is running..");
-            while (this.keepAlive)
-            {
-                this._receivePacket();
-                this._sendPacket();
-            }
-            Utils.PrintScreenMessage("Serial thread is shutting down..");
+            Utils.PrintScreenMessage("Serial OUT thread is running..");
+            while (this.keepAlive) this._sendPacket();
+            Utils.PrintScreenMessage("Serial OUT thread is shutting down..");
         }
+        private void _runReceive()
+        {
+            Utils.PrintScreenMessage("Serial IN thread is running..");
+            while (this.keepAlive) this._receivePacket();
+            Utils.PrintScreenMessage("Serial IN thread is shutting down..");
+        }
+        //
         private void _receivePacket()
         {
             try
@@ -64,6 +73,7 @@ namespace KSPCDriver.Serial
                 this._stream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult _result) {
                     try
                     {
+                        //Utils.PrintDebugMessage("RX!");
                         int packetLenght = this._stream.EndRead(_result);
                         byte[] localCopy = new byte[packetLenght];
                         //copy into local copy
@@ -76,29 +86,34 @@ namespace KSPCDriver.Serial
                             this._lastControllerPacket = tmpPacket;
                             this._controllerPacketMutex.ReleaseMutex();
                         }
+                        else
+                        {
+                            Utils.PrintDebugMessage("[ARDUINO]: " + System.Text.Encoding.UTF8.GetString(localCopy, 0, localCopy.Length));
+                        }
                     }
-                    catch (IOException execption)
+                    catch (IOException exception)
                     {
-                        Utils.PrintScreenMessage("Exception in reading data " + execption.ToString());
+                        Utils.PrintDebugMessage("Exception in reading data " + exception.ToString());
                     }
                 }, null);
             }
-            catch (InvalidOperationException execption)
+            catch (InvalidOperationException exception)
             {
-                Utils.PrintScreenMessage("Exception on opening read buffer " + execption.ToString());
+                Utils.PrintDebugMessage("Exception on opening read buffer " + exception.ToString());
                 Thread.Sleep(500);
             }
         }
         private void _sendPacket()
         {
-            _sendPacketMutex.WaitOne();
+            this._sendPacketMutex.WaitOne();
             if (this._sendData != null)
             {
+                //Utils.PrintDebugMessage("TX!");
                 this._stream.Write(_sendData.getData(), 0, _sendData.getDataLength());
                 this._sendData = null; //mark data as sent!
             }
-            _sendPacketMutex.ReleaseMutex();
+            this._sendPacketMutex.ReleaseMutex();
+            Thread.Sleep(500);
         }
-
     }
 }

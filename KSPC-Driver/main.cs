@@ -19,51 +19,42 @@ namespace KSPCDriver
 {
 
     [KSPAddon(KSPAddon.Startup.Flight, false)]
-    public class KSPSerialIO : MonoBehaviour
+    public class KSPControllerDriver : MonoBehaviour
     {
-        private KSPStateMachine _state;
-        private SerialController _serialController;
+        private static KSPStateMachine _state;
+        private static SerialController _serialController;
         //
-        void Awake() 
-        { 
-            Utils.PrintScreenMessage("KSPCDriver is awake");
-        }
+        void Awake() { }
         //
         void Start()
         {
+            Utils.PrintScreenMessage("KSPCDriver is starting..");
             _state = new KSPStateMachine();
             _serialController = new SerialController();
-
         }
         void Update()
         {
 
             if (FlightGlobals.ActiveVessel != null)
             {
-                if (_serialController.isCommunicationAvailable())
+               if (_serialController != null && _serialController.isCommunicationAvailable())
                 {
-                    this._state.updateOnGameThread();
-                    this._serialController.sendVesselData(this._state.getVesselData());
+                    _state.updateOnGameThread();
+                    _serialController.sendVesselData(_state.getVesselData());
                 }
                 else
                 {
-                    Utils.PrintScreenMessage("Serial com not available at " + KSPCSettings.DefaultPort + ".\n Is the controller connected?");
+                    Utils.PrintScreenMessage("Serial com not available at " + KSPCSettings.DefaultPort + ". Is the controller connected?");
                 }
+            }
+            else
+            {
+                Utils.PrintScreenMessage("No active vessel?");
             }
         }
         void OnDestroy()
         {
-            this._serialController.close();
+            _serialController.close();
         }
     }
 }
-
-
-
-//public static void ControlStatus(int n, Boolean s)
-//{
-//    if (s)
-//        VData.ActionGroups |= (UInt16)(1 << n);       // forces nth bit of x to be 1.  all other bits left alone.
-//    else
-//        VData.ActionGroups &= (UInt16)~(1 << n);      // forces nth bit of x to be 0.  all other bits left alone.
-//}

@@ -69,7 +69,6 @@ namespace KSPCDriver
         // Last 4 bits set navball mode. (0=ignore,1=ORBIT,2=SURFACE,3=TARGET)
     }
 
-  
     public struct VesselControls
     {
         public Boolean SAS;

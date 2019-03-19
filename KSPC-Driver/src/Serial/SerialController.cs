@@ -17,13 +17,12 @@ namespace KSPCDriver.Serial
         private void _openPort()
         {
             Utils.PrintScreenMessage("Starting serial communication..");
-            string controllerTTY = this._getControllerTTY();
             //try to initialize port with specified tty
-            _currentConnection = new SerialPort(controllerTTY);
+            _currentConnection = new SerialPort(this._getControllerTTY());
             if (_currentConnection != null) {
                 //try to establish connection
-                if (_currentConnection.isPortOpen()) Utils.PrintScreenMessage("Connection established with controller at " + controllerTTY);
-                else Utils.PrintScreenMessage("Connection FAIL to be established with controller at " + controllerTTY);
+                if (_currentConnection.isPortOpen()) Utils.PrintScreenMessage("Established conn. at " + this._getControllerTTY());
+                else Utils.PrintScreenMessage("FAIL conn. at " + this._getControllerTTY());
             }
             else Utils.PrintScreenMessage("Cant find controller.");
         }
@@ -33,10 +32,14 @@ namespace KSPCDriver.Serial
             {
                 this._currentConnection.sendData((VesselData)vData);
             }
+            else
+            {
+                Utils.PrintDebugMessage("set NULL vessel data!");
+            }
         }
         public void close()
         {
-            if (this.isCommunicationAvailable())
+            if (this._currentConnection != null)
             {
                 this._currentConnection.close();
                 Utils.PrintScreenMessage("Closing port with controller at " + this._getControllerTTY());
