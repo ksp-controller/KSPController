@@ -100,7 +100,7 @@ namespace KSPCDriver.Serial
             catch (InvalidOperationException exception)
             {
                 Utils.PrintDebugMessage("Exception on opening read buffer " + exception.ToString());
-                Thread.Sleep(500);
+                Thread.Sleep(150);
             }
         }
         private void _sendPacket()
@@ -113,7 +113,7 @@ namespace KSPCDriver.Serial
                 this._sendData = null; //mark data as sent!
             }
             this._sendPacketMutex.ReleaseMutex();
-            Thread.Sleep(500);
+            Thread.Sleep(150);
         }
     }
 }

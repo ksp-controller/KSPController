@@ -98,7 +98,15 @@ namespace KSPCDriver
         public float Max;
         public float Current;
     }
-
+    enum enumActionGroup : int
+    {
+        SAS,
+        RCS,
+        Light,
+        Gear,
+        Brakes,
+        Abort
+    };
     #endregion
 
 }

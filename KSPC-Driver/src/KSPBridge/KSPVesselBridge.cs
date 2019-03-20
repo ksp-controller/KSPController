@@ -98,16 +98,14 @@ namespace KSPCDriver.KSPBridge
                 _data.ActionGroups = (ushort)00000;
             }
 
-            KSPVesselBridge.SetControlStatus(_data, 0, vessel.ActionGroups[KSPActionGroup.SAS]);
-            KSPVesselBridge.SetControlStatus(_data, 1, vessel.ActionGroups[KSPActionGroup.RCS]);
 
-            //_data.ActionGroups |= (UInt16)(1 << 1);
-            //(ushort)(vessel.ActionGroups[KSPActionGroup.RCS] ? 111111 : 000000);
-            //_data.ActionGroups <& vessel.ActionGroups[KSPActionGroup.RCS];
-            //_data.ControlStatus((int)enumAG.Light, vessel.ActionGroups[KSPActionGroup.Light]);
-            //_data.ControlStatus((int)enumAG.Gear, vessel.ActionGroups[KSPActionGroup.Gear]);
-            //_data.ControlStatus((int)enumAG.Brakes, vessel.ActionGroups[KSPActionGroup.Brakes]);
-            //_data.ControlStatus((int)enumAG.Abort, vessel.ActionGroups[KSPActionGroup.Abort]);
+            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.SAS, vessel.ActionGroups[KSPActionGroup.SAS]);
+            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.RCS, vessel.ActionGroups[KSPActionGroup.RCS]);
+            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.Light, vessel.ActionGroups[KSPActionGroup.Light]);
+            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.Gear, vessel.ActionGroups[KSPActionGroup.Gear]);
+            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.Brakes, vessel.ActionGroups[KSPActionGroup.Brakes]);
+            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.Abort, vessel.ActionGroups[KSPActionGroup.Abort]);
+
             //_data.ControlStatus((int)enumAG.Custom01, vessel.ActionGroups[KSPActionGroup.Custom01]);
             //_data.ControlStatus((int)enumAG.Custom02, vessel.ActionGroups[KSPActionGroup.Custom02]);
             //_data.ControlStatus((int)enumAG.Custom03, vessel.ActionGroups[KSPActionGroup.Custom03]);
