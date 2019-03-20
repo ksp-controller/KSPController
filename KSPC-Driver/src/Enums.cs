@@ -98,14 +98,10 @@ namespace KSPCDriver
         public float Max;
         public float Current;
     }
-    enum enumActionGroup : int
+    //used to indexing booleans into byte
+    public enum EnumActionGroup : int
     {
-        SAS,
-        RCS,
-        Light,
-        Gear,
-        Brakes,
-        Abort
+        SAS, RCS, Light, Gear, Brakes, Abort
     };
     #endregion
 

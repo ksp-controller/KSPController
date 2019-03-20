@@ -84,69 +84,50 @@ namespace KSPCDriver.KSPBridge
             }
             //
             Quaternion attitude = Utils.updateHeadingPitchRollField(vessel);
-
             _data.Roll = (float)((attitude.eulerAngles.z > 180) ? (attitude.eulerAngles.z - 360.0) : attitude.eulerAngles.z);
             _data.Pitch = (float)((attitude.eulerAngles.x > 180) ? (360.0 - attitude.eulerAngles.x) : -attitude.eulerAngles.x);
             _data.Heading = (float)attitude.eulerAngles.y;
-
-            if (vessel.ActionGroups[KSPActionGroup.SAS])
+            //                                                                                                                                                        ////
+            if (vessel.ActionGroups[KSPActionGroup.SAS]) _data.ActionGroups = (ushort)11111;
+            else _data.ActionGroups = (ushort)00000;
+            //
+            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.SAS, vessel.ActionGroups[KSPActionGroup.SAS]);
+            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.RCS, vessel.ActionGroups[KSPActionGroup.RCS]);
+            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.Light, vessel.ActionGroups[KSPActionGroup.Light]);
+            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.Gear, vessel.ActionGroups[KSPActionGroup.Gear]);
+            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.Brakes, vessel.ActionGroups[KSPActionGroup.Brakes]);
+            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.Abort, vessel.ActionGroups[KSPActionGroup.Abort]);
+            //
+            for (int i = ((int)EnumActionGroup.Abort + 1); i <= ((int)EnumActionGroup.Abort + 10); i++)
             {
-                _data.ActionGroups = (ushort)11111;
+                int idx = i - (int)EnumActionGroup.Abort;
+                KSPVesselBridge.SetControlStatus(_data, i, vessel.ActionGroups[((KSPActionGroup)(idx * 128))]);
             }
-            else
-            {
-                _data.ActionGroups = (ushort)00000;
-            }
-
-
-            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.SAS, vessel.ActionGroups[KSPActionGroup.SAS]);
-            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.RCS, vessel.ActionGroups[KSPActionGroup.RCS]);
-            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.Light, vessel.ActionGroups[KSPActionGroup.Light]);
-            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.Gear, vessel.ActionGroups[KSPActionGroup.Gear]);
-            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.Brakes, vessel.ActionGroups[KSPActionGroup.Brakes]);
-            KSPVesselBridge.SetControlStatus(_data, (int)enumActionGroup.Abort, vessel.ActionGroups[KSPActionGroup.Abort]);
-
-            //_data.ControlStatus((int)enumAG.Custom01, vessel.ActionGroups[KSPActionGroup.Custom01]);
-            //_data.ControlStatus((int)enumAG.Custom02, vessel.ActionGroups[KSPActionGroup.Custom02]);
-            //_data.ControlStatus((int)enumAG.Custom03, vessel.ActionGroups[KSPActionGroup.Custom03]);
-            //_data.ControlStatus((int)enumAG.Custom04, vessel.ActionGroups[KSPActionGroup.Custom04]);
-            //_data.ControlStatus((int)enumAG.Custom05, vessel.ActionGroups[KSPActionGroup.Custom05]);
-            //_data.ControlStatus((int)enumAG.Custom06, vessel.ActionGroups[KSPActionGroup.Custom06]);
-            //_data.ControlStatus((int)enumAG.Custom07, vessel.ActionGroups[KSPActionGroup.Custom07]);
-            //_data.ControlStatus((int)enumAG.Custom08, vessel.ActionGroups[KSPActionGroup.Custom08]);
-            //_data.ControlStatus((int)enumAG.Custom09, vessel.ActionGroups[KSPActionGroup.Custom09]);
-            //_data.ControlStatus((int)enumAG.Custom10, vessel.ActionGroups[KSPActionGroup.Custom10]);
-
             if (vessel.orbit.referenceBody != null)
             {
                 _data.SOINumber = Utils.GetSOINumber(vessel.orbit.referenceBody.name);
             }
-
             _data.MaxOverHeat = Utils.GetMaxOverHeat(vessel);
             _data.MachNumber = (float)vessel.mach;
             _data.IAS = (float)vessel.indicatedAirSpeed;
-
+            //
             _data.CurrentStage = (byte)StageManager.CurrentStage;
             _data.TotalStage = (byte)StageManager.StageCount;
-
             //target distance and velocity stuff                    
-
             _data.TargetDist = 0;
             _data.TargetV = 0;
-
             if (KSPVesselBridge._anyTarget())
             {
                 _data.TargetDist = (float)Vector3.Distance(FlightGlobals.fetch.VesselTarget.GetVessel().transform.position, vessel.transform.position);
                 _data.TargetV = (float)FlightGlobals.ship_tgtVelocity.magnitude;
             }
-
-
+            //
             _data.NavballSASMode = (byte)(((int)FlightGlobals.speedDisplayMode + 1) << 4); //get navball speed display mode
             if (vessel.ActionGroups[KSPActionGroup.SAS])
             {
                 _data.NavballSASMode = (byte)(((int)FlightGlobals.ActiveVessel.Autopilot.Mode + 1) | _data.NavballSASMode);
             }
-
+            //
             return _data;
         }
         public static void SetControlStatus(VesselData data, int n, Boolean s)

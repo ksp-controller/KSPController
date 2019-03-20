@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using KSP.IO;
 using UnityEngine;
 using KSP.UI.Screens;
+
 namespace KSPCDriver
 {
     [KSPAddon(KSPAddon.Startup.MainMenu, false)]
@@ -27,44 +28,44 @@ namespace KSPCDriver
         //
         void Awake()
         {
-            Utils.PrintScreenMessage("KSPCDriver: Loading settings...");
+            Utils.PrintDebugMessage("KSPCDriver: Loading settings...");
 
             cfg.load();
             DefaultPort = cfg.GetValue<string>("DefaultPort");
-            print("KSPCDriver: Default Port = " + DefaultPort);
+            Utils.PrintDebugMessage("KSPCDriver: Default Port = " + DefaultPort);
 
             BaudRate = cfg.GetValue<int>("BaudRate");
-            print("KSPCDriver: BaudRate = " + BaudRate.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: BaudRate = " + BaudRate.ToString());
 
             PitchEnable = cfg.GetValue<bool>("PitchEnable");
-            print("KSPCDriver: Pitch Enable = " + PitchEnable.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: Pitch Enable = " + PitchEnable.ToString());
 
             RollEnable = cfg.GetValue<bool>("RollEnable");
-            print("KSPCDriver: Roll Enable = " + RollEnable.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: Roll Enable = " + RollEnable.ToString());
 
             YawEnable = cfg.GetValue<bool>("YawEnable");
-            print("KSPCDriver: Yaw Enable = " + YawEnable.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: Yaw Enable = " + YawEnable.ToString());
 
             TXEnable = cfg.GetValue<bool>("TXEnable");
-            print("KSPCDriver: Translate X Enable = " + TXEnable.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: Translate X Enable = " + TXEnable.ToString());
 
             TYEnable = cfg.GetValue<bool>("TYEnable");
-            print("KSPCDriver: Translate Y Enable = " + TYEnable.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: Translate Y Enable = " + TYEnable.ToString());
 
             TZEnable = cfg.GetValue<bool>("TZEnable");
-            print("KSPCDriver: Translate Z Enable = " + TZEnable.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: Translate Z Enable = " + TZEnable.ToString());
 
             WheelSteerEnable = cfg.GetValue<bool>("WheelSteerEnable");
-            print("KSPCDriver: Wheel Steering Enable = " + WheelSteerEnable.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: Wheel Steering Enable = " + WheelSteerEnable.ToString());
 
             ThrottleEnable = cfg.GetValue<bool>("ThrottleEnable");
-            print("KSPCDriver: Throttle Enable = " + ThrottleEnable.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: Throttle Enable = " + ThrottleEnable.ToString());
 
             WheelThrottleEnable = cfg.GetValue<bool>("WheelThrottleEnable");
-            print("KSPCDriver: Wheel Throttle Enable = " + WheelThrottleEnable.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: Wheel Throttle Enable = " + WheelThrottleEnable.ToString());
 
             SASTol = cfg.GetValue<double>("SASTol");
-            print("KSPCDriver: SAS Tol = " + SASTol.ToString());
+            Utils.PrintDebugMessage("KSPCDriver: SAS Tol = " + SASTol.ToString());
         }
     }
 }

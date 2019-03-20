@@ -34,3 +34,5 @@ KSPC-Driver/obj/Release/KSPC-Driver.csproj.FilesWrittenAbsolute.txt
 KSPC-Driver/obj/Release/KSPC-Driver.dll
 KSPC-Driver-cross-*
 KSPC-Driver.version
+.vs/KSPC-Driver/xs/sqlite3/storage.ide
+.vs/KSPC-Driver/xs/sqlite3/storage.ide-wal

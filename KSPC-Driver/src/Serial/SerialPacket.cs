@@ -15,7 +15,7 @@ namespace KSPCDriver.Serial
         DONE // DONE
     };
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct SerializedPacketControl
+    internal struct SerializedVesselControls
     {
         public byte MainControls;                  //SAS RCS Lights Gear Brakes Precision Abort Stage 
         public byte Mode;                          //0 = stage, 1 = docking, 2 = map
@@ -93,7 +93,7 @@ namespace KSPCDriver.Serial
         //Parser
         private object _parsePayload()
         {
-            SerializedPacketControl _controlPacket = this._deserializePacketControl();
+            SerializedVesselControls _controlPacket = this._deserializePacketControl();
             // 
             VesselControls _control = new VesselControls();
             _control.SAS = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 7);
@@ -122,13 +122,13 @@ namespace KSPCDriver.Serial
         }
         //
 
-        private SerializedPacketControl _deserializePacketControl()
+        private SerializedVesselControls _deserializePacketControl()
         {
-            SerializedPacketControl _controlPacket = new SerializedPacketControl();
+            SerializedVesselControls _controlPacket = new SerializedVesselControls();
             int len = Marshal.SizeOf(_controlPacket);
             IntPtr i = Marshal.AllocHGlobal(Marshal.SizeOf(len));
             Marshal.Copy(_payload, 0, i, len);
-            _controlPacket = (SerializedPacketControl)Marshal.PtrToStructure(i, _controlPacket.GetType());
+            _controlPacket = (SerializedVesselControls)Marshal.PtrToStructure(i, _controlPacket.GetType());
             Marshal.FreeHGlobal(i);
             return _controlPacket;
         }

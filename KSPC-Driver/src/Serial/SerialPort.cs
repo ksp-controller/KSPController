@@ -24,27 +24,25 @@ namespace KSPCDriver.Serial
         public SerialPort(string serialPath)
         {
             _comTTYPath = serialPath;
-            //TODO CUSTOM BAUD RATE?
-            _com = new Psimax.IO.Ports.SerialPort(_comTTYPath, 9600, Parity.None, 8, StopBits.One);
-            _worker = null;
-            if (this._startCom())
-            {
-                _worker = new SerialPortWorker(_com.BaseStream);
-            }
+            this._openCom();
         }
-        private bool _startCom()
+        private void _openCom()
         {
+            _com = new Psimax.IO.Ports.SerialPort(_comTTYPath, KSPCSettings.BaudRate, Parity.None, 8, StopBits.One);
+            _worker = null;
             Utils.PrintScreenMessage("Trying to establish communication at " + this._comTTYPath);
-            try {
+            try
+            {
                 this._com.Open();
                 Thread.Sleep(500);
+                _worker = new SerialPortWorker(_com.BaseStream);
             }
             catch (Exception e)
             {
                 Utils.PrintScreenMessage(e.Message);
-                return false;
-            } return true;
+            }
         }
+
         public void updateState(KSPStateMachine state)
         {
             object _tmp = this._worker.getLastControlRead();

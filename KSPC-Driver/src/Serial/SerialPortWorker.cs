@@ -31,7 +31,7 @@ namespace KSPCDriver.Serial
         public void stop()
         {
             Utils.PrintDebugMessage("Stopping worker..");
-            if (_inThread == null) return;
+            if (!this.keepAlive) return;
             this.keepAlive = false;
             _inThread.Interrupt();
             _inThread = null;
@@ -40,6 +40,7 @@ namespace KSPCDriver.Serial
         }
         public object getLastControlRead()
         {
+            if (!this.keepAlive) return null;
             object tmpRetValue;
             this._controllerPacketMutex.WaitOne();
             tmpRetValue = _lastControllerPacket.parsedData();
@@ -48,6 +49,7 @@ namespace KSPCDriver.Serial
         }
         public void setSendData(SerialPacketData data)
         {
+            if (!this.keepAlive) return;
             this._sendPacketMutex.WaitOne();
             this._sendData = data;
             this._sendPacketMutex.ReleaseMutex();
@@ -94,6 +96,7 @@ namespace KSPCDriver.Serial
                     catch (IOException exception)
                     {
                         Utils.PrintDebugMessage("Exception in reading data " + exception.ToString());
+                        this.stop();
                     }
                 }, null);
             }
@@ -101,6 +104,7 @@ namespace KSPCDriver.Serial
             {
                 Utils.PrintDebugMessage("Exception on opening read buffer " + exception.ToString());
                 Thread.Sleep(150);
+                this.stop();
             }
         }
         private void _sendPacket()
