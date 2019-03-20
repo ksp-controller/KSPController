@@ -24,22 +24,22 @@ namespace KSPCDriver.Serial
         public SerialPort(string serialPath)
         {
             _comTTYPath = serialPath;
+            _worker = null;
             this._openCom();
         }
         private void _openCom()
         {
-            _com = new Psimax.IO.Ports.SerialPort(_comTTYPath, KSPCSettings.BaudRate, Parity.None, 8, StopBits.One);
-            _worker = null;
             Utils.PrintScreenMessage("Trying to establish communication at " + this._comTTYPath);
             try
             {
+                _com = new Psimax.IO.Ports.SerialPort(_comTTYPath, KSPCSettings.BaudRate, Parity.None, 8, StopBits.One);
                 this._com.Open();
                 Thread.Sleep(500);
-                _worker = new SerialPortWorker(_com.BaseStream);
+                _worker = new SerialPortWorker(this._com.BaseStream);
             }
             catch (Exception e)
             {
-                Utils.PrintScreenMessage(e.Message);
+                Utils.PrintScreenMessage(e.ToString());
             }
         }
 
@@ -58,7 +58,6 @@ namespace KSPCDriver.Serial
 
         public void sendData(VesselData data)
         {
-
             SerialPacketData outPacket = new SerialPacketData(data);
             this._worker.setSendData(outPacket);
         }

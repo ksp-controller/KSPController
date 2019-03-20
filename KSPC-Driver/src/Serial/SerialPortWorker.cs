@@ -56,15 +56,15 @@ namespace KSPCDriver.Serial
         }
         private void _runSend()
         {
-            Utils.PrintScreenMessage("Serial OUT thread is running..");
+            Utils.PrintDebugMessage("Serial OUT thread is running..");
             while (this.keepAlive) this._sendPacket();
-            Utils.PrintScreenMessage("Serial OUT thread is shutting down..");
+            Utils.PrintDebugMessage("Serial OUT thread is shutting down..");
         }
         private void _runReceive()
         {
-            Utils.PrintScreenMessage("Serial IN thread is running..");
+            Utils.PrintDebugMessage("Serial IN thread is running..");
             while (this.keepAlive) this._receivePacket();
-            Utils.PrintScreenMessage("Serial IN thread is shutting down..");
+            Utils.PrintDebugMessage("Serial IN thread is shutting down..");
         }
         //
         private void _receivePacket()
@@ -103,7 +103,7 @@ namespace KSPCDriver.Serial
             catch (InvalidOperationException exception)
             {
                 Utils.PrintDebugMessage("Exception on opening read buffer " + exception.ToString());
-                Thread.Sleep(150);
+                Thread.Sleep(50);
                 this.stop();
             }
         }
@@ -117,7 +117,7 @@ namespace KSPCDriver.Serial
                 this._sendData = null; //mark data as sent!
             }
             this._sendPacketMutex.ReleaseMutex();
-            Thread.Sleep(150);
+            Thread.Sleep(50);
         }
     }
 }
