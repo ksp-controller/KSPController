@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using KSP.IO;
+﻿using KSP.IO;
 using UnityEngine;
-using KSP.UI.Screens;
 
 namespace KSPCDriver
 {
@@ -29,9 +26,20 @@ namespace KSPCDriver
         void Awake()
         {
             Utils.PrintDebugMessage("KSPCDriver: Loading settings...");
-
             cfg.load();
+            //Read the default port from config file
             DefaultPort = cfg.GetValue<string>("DefaultPort");
+
+            //if the usb port detected automatically replace it
+            string[] usbs = USBDetector.GetUSBNames();
+            foreach (string usb in usbs)
+            {
+                if (!string.IsNullOrEmpty(usb))
+                {
+                    DefaultPort = usb;
+                    break;
+                }
+            }
             Utils.PrintDebugMessage("KSPCDriver: Default Port = " + DefaultPort);
 
             BaudRate = cfg.GetValue<int>("BaudRate");

@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Threading;
-using Microsoft.Win32;
-using System.Runtime.InteropServices;
+﻿using UnityEngine;
 
-using Psimax.IO.Ports;
-using KSP.IO;
-using UnityEngine;
-using KSP.UI.Screens;
-//
 using KSPCDriver.Serial;
 using KSPCDriver.KSPBridge;
 
@@ -19,10 +7,11 @@ namespace KSPCDriver
 {
 
     [KSPAddon(KSPAddon.Startup.Flight, false)]
-    public class KSPControllerDriver : MonoBehaviour
+    public class KSPControllerDriver :MonoBehaviour
     {
         private static KSPStateMachine _state;
         private static SerialController _serialController;
+
         //
         void Awake() { }
         //
@@ -44,7 +33,7 @@ namespace KSPCDriver
                 }
                 else
                 {
-                    Utils.PrintScreenMessage("Serial com not available at " + KSPCSettings.DefaultPort + ". Is the controller connected?");
+                    Utils.PrintScreenMessage("Serial port at " + KSPCSettings.DefaultPort + " is not working. Is the controller connected?");
                 }
             }
             else
