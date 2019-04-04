@@ -16,24 +16,9 @@ xcuserdata
 # svn & cvs
 .svn
 CVS
-KSPC-Driver/bin/Release/Assembly-CSharp-firstpass.dll
-KSPC-Driver/bin/Release/Assembly-CSharp.dll
-KSPC-Driver/bin/Release/Assembly-UnityScript.dll
-KSPC-Driver/bin/Release/Boo.Lang.dll
-KSPC-Driver/bin/Release/Ionic.Zip.dll
-KSPC-Driver/bin/Release/KSPAssets.dll
-KSPC-Driver/bin/Release/KSPC-Driver.dll
-KSPC-Driver/bin/Release/KSPTrackIR.dll
-KSPC-Driver/bin/Release/Mono.Cecil.dll
-KSPC-Driver/bin/Release/PsimaxSerial.dll
-KSPC-Driver/bin/Release/UnityEngine.dll
-KSPC-Driver/bin/Release/UnityEngine.UI.dll
-KSPC-Driver/bin/Release/UnityScript.Lang.dll
-KSPC-Driver/obj/Release/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-KSPC-Driver/obj/Release/KSPC-Driver.csproj.FilesWrittenAbsolute.txt
-KSPC-Driver/obj/Release/KSPC-Driver.dll
 KSPC-Driver-cross-*
 KSPC-Driver.version
 .vs/KSPC-Driver/xs/sqlite3/storage.ide
 .vs/KSPC-Driver/xs/sqlite3/storage.ide-wal
-KSPC-Driver/bin/Release/*
+KSPC-Driver/bin/*
+KSPC-Driver/obj/*

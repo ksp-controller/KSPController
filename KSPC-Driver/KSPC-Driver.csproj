@@ -64,6 +64,7 @@
     <Compile Include="src\KSPBridge\KSPStateMachine.cs" />
     <Compile Include="src\Serial\SerialPacket.cs" />
     <Compile Include="src\KSPBridge\KSPVesselBridge.cs" />
+    <Compile Include="src\USBDetector.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />
