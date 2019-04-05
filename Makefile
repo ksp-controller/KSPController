@@ -1,5 +1,5 @@
 export PATH := /usr/local/bin:$(PATH)
-XBUILD=xbuild
+XBUILD=msbuild
 CONFIG=Release
 
 KSPDIR=/Users/gwdp/Library/Application\ Support/Steam/steamapps/common/Kerbal\ Space\ Program

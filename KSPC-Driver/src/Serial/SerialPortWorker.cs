@@ -103,7 +103,7 @@ namespace KSPCDriver.Serial
             catch (InvalidOperationException exception)
             {
                 Utils.PrintDebugMessage("Exception on opening read buffer " + exception.ToString());
-                Thread.Sleep(50);
+                Thread.Sleep((int)Definitions.SERIAL_THREAD_FREQUENCY);
                 this.stop();
             }
         }
@@ -117,7 +117,7 @@ namespace KSPCDriver.Serial
                 this._sendData = null; //mark data as sent!
             }
             this._sendPacketMutex.ReleaseMutex();
-            Thread.Sleep(50);
+            Thread.Sleep((int)Definitions.SERIAL_THREAD_FREQUENCY);
         }
     }
 }

@@ -11,11 +11,10 @@ namespace KSPCDriver
 
         static USBDetector()
         {
-            serial_usbs = new List<string>();
             platf = (int)Environment.OSVersion.Platform;
         }
 
-        public static string[] GetUSBNames()
+        public static string GetControllerPort()
         {
             // Are we in MacOS or Linux
             if (platf == 4 || platf == 128 || platf == 6)
@@ -29,11 +28,11 @@ namespace KSPCDriver
                         || dev.StartsWith("/dev/ttyACM", StringComparison.CurrentCulture)
                         || dev.StartsWith("/dev/cu.usb", StringComparison.CurrentCulture))
                     {
-                        serial_usbs.Add(dev);
+                        return dev;
                     }
                 }
             }
-            return serial_usbs.ToArray();
+            return null;
         }
     }
 }

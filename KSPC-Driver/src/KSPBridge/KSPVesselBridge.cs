@@ -91,17 +91,17 @@ namespace KSPCDriver.KSPBridge
             if (vessel.ActionGroups[KSPActionGroup.SAS]) _data.ActionGroups = (ushort)11111;
             else _data.ActionGroups = (ushort)00000;
             //
-            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.SAS, vessel.ActionGroups[KSPActionGroup.SAS]);
-            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.RCS, vessel.ActionGroups[KSPActionGroup.RCS]);
-            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.Light, vessel.ActionGroups[KSPActionGroup.Light]);
-            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.Gear, vessel.ActionGroups[KSPActionGroup.Gear]);
-            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.Brakes, vessel.ActionGroups[KSPActionGroup.Brakes]);
-            KSPVesselBridge.SetControlStatus(_data, (int)EnumActionGroup.Abort, vessel.ActionGroups[KSPActionGroup.Abort]);
+            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.SAS, vessel.ActionGroups[KSPActionGroup.SAS]);
+            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.RCS, vessel.ActionGroups[KSPActionGroup.RCS]);
+            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.Light, vessel.ActionGroups[KSPActionGroup.Light]);
+            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.Gear, vessel.ActionGroups[KSPActionGroup.Gear]);
+            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.Brakes, vessel.ActionGroups[KSPActionGroup.Brakes]);
+            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.Abort, vessel.ActionGroups[KSPActionGroup.Abort]);
             //
             for (int i = ((int)EnumActionGroup.Abort + 1); i <= ((int)EnumActionGroup.Abort + 10); i++)
             {
                 int idx = i - (int)EnumActionGroup.Abort;
-                KSPVesselBridge.SetControlStatus(_data, i, vessel.ActionGroups[((KSPActionGroup)(idx * 128))]);
+                //KSPVesselBridge.GetControlStatus(_data, i, vessel.ActionGroups[((KSPActionGroup)(idx * 128))]);
             }
             if (vessel.orbit.referenceBody != null)
             {
@@ -130,7 +130,7 @@ namespace KSPCDriver.KSPBridge
             //
             return _data;
         }
-        public static void SetControlStatus(VesselData data, int n, Boolean s)
+        public static void GetControlStatus(VesselData data, int n, Boolean s)
         {
             if (s)
                 data.ActionGroups |= (UInt16)(1 << n);       // forces nth bit of x to be 1.  all other bits left alone.

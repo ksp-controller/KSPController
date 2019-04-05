@@ -29,18 +29,14 @@ namespace KSPCDriver
             cfg.load();
             //Read the default port from config file
             DefaultPort = cfg.GetValue<string>("DefaultPort");
-
-            //if the usb port detected automatically replace it
-            string[] usbs = USBDetector.GetUSBNames();
-            foreach (string usb in usbs)
-            {
-                if (!string.IsNullOrEmpty(usb))
-                {
-                    DefaultPort = usb;
-                    break;
-                }
-            }
             Utils.PrintDebugMessage("KSPCDriver: Default Port = " + DefaultPort);
+            //Check if have a USB port from detector
+            string usbPort = USBDetector.GetControllerPort();
+            if (usbPort != null)
+            {
+                DefaultPort = usbPort;
+                Utils.PrintDebugMessage("KSPCDriver: Using USB Port = " + DefaultPort);
+            }
 
             BaudRate = cfg.GetValue<int>("BaudRate");
             Utils.PrintDebugMessage("KSPCDriver: BaudRate = " + BaudRate.ToString());

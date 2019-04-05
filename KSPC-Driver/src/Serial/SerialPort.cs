@@ -34,7 +34,7 @@ namespace KSPCDriver.Serial
             {
                 _com = new Psimax.IO.Ports.SerialPort(_comTTYPath, KSPCSettings.BaudRate, Parity.None, 8, StopBits.One);
                 this._com.Open();
-                Thread.Sleep(500);
+                Thread.Sleep(500); //wait til connection is established 
                 _worker = new SerialPortWorker(this._com.BaseStream);
             }
             catch (Exception e)

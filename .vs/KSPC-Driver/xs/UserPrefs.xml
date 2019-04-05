@@ -1,32 +1,30 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="KSPC-Driver/src/USBDetector.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="KSPC-Driver/src/Settings.cs">
     <Files>
-      <File FileName="KSPC-Driver/Properties/AssemblyInfo.cs" Line="1" Column="1" />
-      <File FileName="KSPC-Driver/src/Serial/SerialPortWorker.cs" Line="107" Column="10" />
+      <File FileName="KSPC-Driver/src/Serial/SerialPortWorker.cs" Line="111" Column="10" />
       <File FileName="KSPC-Driver/src/Serial/SerialPacket.cs" Line="141" Column="10" />
       <File FileName="KSPC-Driver/src/Serial/SerialController.cs" Line="33" Column="14" />
-      <File FileName="KSPC-Driver/src/Serial/SerialPort.cs" Line="1" Column="1" />
+      <File FileName="KSPC-Driver/src/Serial/SerialPort.cs" Line="30" Column="32" />
       <File FileName="KSPC-Driver/main.cs" Line="47" Column="10" />
       <File FileName="KSPC-Driver/src/KSPBridge/KSPStateMachine.cs" Line="38" Column="69" />
-      <File FileName="KSPC-Driver/src/KSPBridge/KSPVesselBridge.cs" Line="61" Column="37" />
-      <File FileName="KSPC-Driver/src/Definitions.cs" Line="1" Column="1" />
+      <File FileName="KSPC-Driver/src/KSPBridge/KSPVesselBridge.cs" Line="104" Column="51" />
+      <File FileName="KSPC-Driver/src/Definitions.cs" Line="12" Column="2" />
       <File FileName="KSPC-Driver/src/Enums.cs" Line="55" Column="35" />
       <File FileName="KSPC-Driver/src/Utils.cs" Line="11" Column="6" />
-      <File FileName="KSPC-Driver/src/Settings.cs" Line="3" Column="1" />
-      <File FileName="KSPC-Driver/src/USBDetector.cs" Line="1" Column="1" />
+      <File FileName="KSPC-Driver/src/Settings.cs" Line="32" Column="82" />
+      <File FileName="KSPC-Driver/src/USBDetector.cs" Line="17" Column="47" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="KSPC-Driver" expanded="True">
             <Node name="KSPC-Driver" expanded="True">
-              <Node name="References" expanded="True">
-                <Node name="UnityEngine.UI" selected="True" />
-              </Node>
+              <Node name="References" expanded="True" />
               <Node name="Properties" expanded="True" />
               <Node name="src" expanded="True">
                 <Node name="KSPBridge" expanded="True" />
                 <Node name="Serial" expanded="True" />
+                <Node name="Settings.cs" selected="True" />
               </Node>
             </Node>
           </Node>
@@ -35,7 +33,7 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
