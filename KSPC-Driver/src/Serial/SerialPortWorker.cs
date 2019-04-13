@@ -5,7 +5,7 @@ using System.IO;
 
 namespace KSPCDriver.Serial
 {
-    public class SerialPortWorker
+    unsafe public class SerialPortWorker
     {
         public bool keepAlive;
         private Stream _stream; //read stream
@@ -71,34 +71,106 @@ namespace KSPCDriver.Serial
         {
             try
             {
-                byte[] buffer = new byte[Definitions.MAX_PACKET_SIZE + 4]; //+4 for ack, verrifier, checksum and size
-                this._stream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult _result) {
-                    try
+                Utils.PrintDebugMessage("BEGIN ");
+                //Utils.PrintDebugMessage("[ARDUINO]: buffSize " + *buffRead);
+                //if (*buffRead == 0) buffer = new byte[Definitions.MAX_PACKET_SIZE + 4]; // +4 for ack, verrifier, checksum and size
+                //this._stream.Read(buffer, 0, buffer.Length);
+                // this._stream.BeginRead(buffer, *buffRead, buffer.Length, delegate (IAsyncResult _result) {
+                //    try
+                //    {
+                //        //Utils.PrintDebugMessage("RX!");
+                //        *buffRead += this._stream.EndRead(_result);
+                //        byte[] packet = new byte[*buffRead];
+                //        //copy into local copy
+                //        Buffer.BlockCopy(buffer, 0, packet, 0, *buffRead);
+
+                //        //check if need to clean buffer
+                //        if (SerialPacketState.INVALID == _readState)
+                //        {
+                //            *buffRead = 0;
+                //        }
+                //    }
+                //    catch (IOException exception)
+                //    {
+                //        Utils.PrintDebugMessage("Exception in reading data " + exception.ToString());
+                //        this.stop();
+                //    }
+                //}, null);
+
+                //initiate read stuff
+                byte _currReadSize = 0; //current packet size
+                byte _currReadDone = 0; //current packet already read
+                byte[] _readPayload = new byte[Definitions.MAX_PACKET_SIZE]; //tmp payload
+                SerialPacketState _readState = SerialPacketState.ACK;
+                //
+                int _read;
+                while (this._stream.CanRead && (_read = this._stream.ReadByte()) != -1 && this.keepAlive)
+                {
+
+                    //read
+                    switch (_readState)
                     {
-                        //Utils.PrintDebugMessage("RX!");
-                        int packetLenght = this._stream.EndRead(_result);
-                        byte[] packet = new byte[packetLenght];
-                        //copy into local copy
-                        Buffer.BlockCopy(buffer, 0, packet, 0, packetLenght);
-                        //try to get packet
-                        SerialPacketControl tmpPacket = new SerialPacketControl(packet, packetLenght);
-                        if (tmpPacket.isValid())
-                        {
-                            this._controllerPacketMutex.WaitOne();
-                            this._lastControllerPacket = tmpPacket;
-                            this._controllerPacketMutex.ReleaseMutex();
-                        }
-                        else
-                        {
-                            Utils.PrintDebugMessage("[ARDUINO]: " + System.Text.Encoding.UTF8.GetString(localCopy, 0, localCopy.Length));
-                        }
+                        case SerialPacketState.ACK: //packet header
+                            {   
+                                if ((byte)_read == Definitions.PACKET_ACK) _readState = SerialPacketState.VERIFIER;
+                            }
+                            break;
+                        case SerialPacketState.VERIFIER:
+                            {
+                                if ((byte)_read == Definitions.PACKET_VERIFIER) _readState = SerialPacketState.SIZE; //proceed
+                                else _readState = SerialPacketState.ACK; //verifier failed, get back to ack
+                            }
+                            break;
+                        case SerialPacketState.SIZE:
+                            {
+                                _currReadSize = (byte)_read;
+                                _readState = SerialPacketState.PAYLOAD; //receive payload
+                            }
+                            break;
+                        case SerialPacketState.PAYLOAD:
+                            {
+                                _readPayload[_currReadDone] = (byte)_read;
+                                _currReadDone++;
+                                if (_currReadDone == _currReadSize) _readState = SerialPacketState.CHECKSUM; //reach expected size, go to checksum
+                            }
+                            break;
+                        case SerialPacketState.CHECKSUM:
+                            {
+                                if (Utils.packetChecksum(_readPayload) == (byte)_read)
+                                {
+                                    SerialPacketControl tmpPacket = new SerialPacketControl(_readPayload);
+                                    if (tmpPacket.isValid())
+                                    {
+                                        this._controllerPacketMutex.WaitOne();
+                                        this._lastControllerPacket = tmpPacket;
+                                        this._controllerPacketMutex.ReleaseMutex();
+                                        _readState = SerialPacketState.DONE;
+                                    }
+                                    else
+                                    {
+                                        Utils.PrintDebugMessage("[ARDUINO]: " + System.Text.Encoding.UTF8.GetString(_readPayload, 0, _currReadDone));
+                                        Utils.PrintDebugMessage("SIZE " + _currReadDone.ToString());
+                                        _readState = SerialPacketState.INVALID;
+                                    }
+                                }
+                                else
+                                {
+                                    Utils.PrintDebugMessage("[ARDUINO]:: " + System.Text.Encoding.UTF8.GetString(_readPayload, 0, _currReadDone));
+                                    Utils.PrintDebugMessage("SIZE " + _currReadDone.ToString());
+                                    _readState = SerialPacketState.INVALID;
+                                }
+                            } break;
                     }
-                    catch (IOException exception)
-                    {
-                        Utils.PrintDebugMessage("Exception in reading data " + exception.ToString());
-                        this.stop();
+                    //if need to reset
+                    if (_readState == SerialPacketState.DONE || _readState == SerialPacketState.INVALID) {
+                        Utils.PrintDebugMessage("RESET " + _readState.ToString());
+                        _currReadSize = 0;
+                        _currReadDone = 0; //current packet already read
+                        _readPayload = new byte[Definitions.MAX_PACKET_SIZE]; //tmp payload
+                        _readState = SerialPacketState.ACK;
                     }
-                }, null);
+                }
+
             }
             catch (InvalidOperationException exception)
             {

@@ -1,8 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="KSPC-Driver/src/KSPBridge/KSPVesselBridge.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="KSPC-Driver/src/Serial/SerialPortWorker.cs">
     <Files>
-      <File FileName="KSPC-Driver/src/Serial/SerialPortWorker.cs" Line="1" Column="1" />
-      <File FileName="KSPC-Driver/src/Serial/SerialPacket.cs" Line="141" Column="10" />
+      <File FileName="KSPC-Driver/src/Serial/SerialPortWorker.cs" Line="75" Column="35" />
+      <File FileName="KSPC-Driver/src/Serial/SerialPacket.cs" Line="70" Column="38" />
       <File FileName="KSPC-Driver/src/Serial/SerialController.cs" Line="33" Column="14" />
       <File FileName="KSPC-Driver/src/Serial/SerialPort.cs" Line="1" Column="1" />
       <File FileName="KSPC-Driver/main.cs" Line="25" Column="22" />
@@ -20,8 +20,9 @@
           <Node name="KSPC-Driver" expanded="True">
             <Node name="KSPC-Driver" expanded="True">
               <Node name="src" expanded="True">
-                <Node name="KSPBridge" expanded="True">
-                  <Node name="KSPVesselBridge.cs" selected="True" />
+                <Node name="KSPBridge" expanded="True" />
+                <Node name="Serial" expanded="True">
+                  <Node name="SerialPortWorker.cs" selected="True" />
                 </Node>
               </Node>
             </Node>

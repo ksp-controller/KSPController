@@ -36,9 +36,9 @@ namespace KSPCDriver.Serial
     {
         //
         private byte[] _payload;
-        public SerialPacketControl(byte[] buff, int buffLen)
+        public SerialPacketControl(byte[] buff)
         {
-            _payload = this._receiveBuffer(buff, buffLen);
+            _payload = buff;
         }
         public bool isValid()
         {
@@ -49,48 +49,6 @@ namespace KSPCDriver.Serial
             return this._parsePayload();
         }
 
-        //Payload
-        private byte[] _receiveBuffer(byte[] buff, int buffLen)
-        {
-            byte _currReadSize = 0; //current packet size
-            byte _currReadDone = 0; //current packet already read
-            byte[] _readPayload = new byte[Definitions.MAX_PACKET_SIZE];
-            SerialPacketState _readState = SerialPacketState.ACK;
-            for (int x = 0; x < buffLen; x++)
-            {
-                switch (_readState)
-                {
-                    case SerialPacketState.ACK: //packet header
-                        if (buff[x] == Definitions.PACKET_ACK) _readState = SerialPacketState.VERIFIER;
-                        break;
-                    case SerialPacketState.VERIFIER:
-                        if (buff[x] == Definitions.PACKET_VERIFIER) _readState = SerialPacketState.SIZE; //proceed
-                        else _readState = SerialPacketState.ACK; //verifier failed, get back to ack
-                        break;
-                    case SerialPacketState.SIZE:
-                        _currReadSize = buff[x];
-                        _readState = SerialPacketState.PAYLOAD; //receive payload
-                        break;
-                    case SerialPacketState.PAYLOAD:
-                        _readPayload[_currReadDone] = buff[x];
-                        _currReadDone++;
-                        _currReadDone++;
-                        if (_currReadDone == _currReadSize) _readState = SerialPacketState.CHECKSUM; //reach expected size, go to checksum
-                        break;
-                    case SerialPacketState.CHECKSUM:
-                        if (Utils.packetChecksum(_readPayload) == _readPayload[x])
-                        {
-                            _readState = SerialPacketState.DONE;
-                            return _readPayload;
-                        }
-                        _readState = SerialPacketState.INVALID;
-                        break;
-                }
-            }
-            Utils.PrintDebugMessage("Failing on " +  _readState.ToString());
-            //fail return null
-            return null;
-        }
         //Parser
         private object _parsePayload()
         {
