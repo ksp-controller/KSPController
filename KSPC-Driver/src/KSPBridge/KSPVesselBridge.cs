@@ -9,7 +9,7 @@ namespace KSPCDriver.KSPBridge
 {
     public class KSPVesselBridge
     {
-        public static VesselData GetVesselData(Vessel vessel)
+        unsafe public static VesselData GetVesselData(Vessel vessel)
         {
             VesselData _data = new VesselData();
             //tmp info
@@ -86,22 +86,19 @@ namespace KSPCDriver.KSPBridge
             Quaternion attitude = Utils.updateHeadingPitchRollField(vessel);
             _data.Roll = (float)((attitude.eulerAngles.z > 180) ? (attitude.eulerAngles.z - 360.0) : attitude.eulerAngles.z);
             _data.Pitch = (float)((attitude.eulerAngles.x > 180) ? (360.0 - attitude.eulerAngles.x) : -attitude.eulerAngles.x);
-            _data.Heading = (float)attitude.eulerAngles.y;
-            //                                                                                                                                                        ////
-            if (vessel.ActionGroups[KSPActionGroup.SAS]) _data.ActionGroups = (ushort)11111;
-            else _data.ActionGroups = (ushort)00000;
+            _data.Heading = (float)attitude.eulerAngles.y;                                                                                                                                                    ////
             //
-            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.SAS, vessel.ActionGroups[KSPActionGroup.SAS]);
-            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.RCS, vessel.ActionGroups[KSPActionGroup.RCS]);
-            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.Light, vessel.ActionGroups[KSPActionGroup.Light]);
-            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.Gear, vessel.ActionGroups[KSPActionGroup.Gear]);
-            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.Brakes, vessel.ActionGroups[KSPActionGroup.Brakes]);
-            KSPVesselBridge.GetControlStatus(_data, (int)EnumActionGroup.Abort, vessel.ActionGroups[KSPActionGroup.Abort]);
+            KSPVesselBridge.GetControlStatus(&_data, (int)EnumActionGroup.SAS, vessel.ActionGroups[KSPActionGroup.SAS]);
+            KSPVesselBridge.GetControlStatus(&_data, (int)EnumActionGroup.RCS, vessel.ActionGroups[KSPActionGroup.RCS]);
+            KSPVesselBridge.GetControlStatus(&_data, (int)EnumActionGroup.Light, vessel.ActionGroups[KSPActionGroup.Light]);
+            KSPVesselBridge.GetControlStatus(&_data, (int)EnumActionGroup.Gear, vessel.ActionGroups[KSPActionGroup.Gear]);
+            KSPVesselBridge.GetControlStatus(&_data, (int)EnumActionGroup.Brakes, vessel.ActionGroups[KSPActionGroup.Brakes]);
+            KSPVesselBridge.GetControlStatus(&_data, (int)EnumActionGroup.Abort, vessel.ActionGroups[KSPActionGroup.Abort]);
             //
             for (int i = ((int)EnumActionGroup.Abort + 1); i <= ((int)EnumActionGroup.Abort + 10); i++)
             {
                 int idx = i - (int)EnumActionGroup.Abort;
-                //KSPVesselBridge.GetControlStatus(_data, i, vessel.ActionGroups[((KSPActionGroup)(idx * 128))]);
+                KSPVesselBridge.GetControlStatus(&_data, i, vessel.ActionGroups[((KSPActionGroup)(idx * 128))]);
             }
             if (vessel.orbit.referenceBody != null)
             {
@@ -130,13 +127,15 @@ namespace KSPCDriver.KSPBridge
             //
             return _data;
         }
-        public static void GetControlStatus(VesselData data, int n, Boolean s)
+
+        unsafe public static void GetControlStatus(VesselData* data, int n, bool s)
         {
             if (s)
-                data.ActionGroups |= (UInt16)(1 << n);       // forces nth bit of x to be 1.  all other bits left alone.
+                data->ActionGroups |= (UInt16)(1UL << n);       // forces nth bit of x to be 1.  all other bits left alone.
             else
-                data.ActionGroups &= (UInt16)~(1 << n);      // forces nth bit of x to be 0.  all other bits left alone.
+                data->ActionGroups &= (UInt16)~(1UL << n);      // forces nth bit of x to be 0.  all other bits left alone.
         }
+    
         public static void SetControllerOnVessel(VesselControls controls, VesselControls previousControls, Vessel vessel)
         {
             _setValueIfDiffer(controls.RCS, previousControls.RCS, vessel, KSPActionGroup.RCS);

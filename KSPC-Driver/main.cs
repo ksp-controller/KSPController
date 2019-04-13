@@ -18,6 +18,7 @@ namespace KSPCDriver
         void Start()
         {
             Utils.PrintScreenMessage("KSPCDriver is starting..");
+            KSPCSettings.reloadUSBPorts();
             _state = new KSPStateMachine();
             _serialController = new SerialController();
         }

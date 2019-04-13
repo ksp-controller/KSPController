@@ -71,5 +71,15 @@ namespace KSPCDriver
             SASTol = cfg.GetValue<double>("SASTol");
             Utils.PrintDebugMessage("KSPCDriver: SAS Tol = " + SASTol.ToString());
         }
+        public static void reloadUSBPorts()
+        {
+            //Check if have a USB port from detector
+            string usbPort = USBDetector.GetControllerPort();
+            if (usbPort != null)
+            {
+                DefaultPort = usbPort;
+                Utils.PrintDebugMessage("KSPCDriver: Using USB Port = " + DefaultPort);
+            }
+        }
     }
 }

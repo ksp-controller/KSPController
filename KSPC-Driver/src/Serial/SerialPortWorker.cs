@@ -77,11 +77,11 @@ namespace KSPCDriver.Serial
                     {
                         //Utils.PrintDebugMessage("RX!");
                         int packetLenght = this._stream.EndRead(_result);
-                        byte[] localCopy = new byte[packetLenght];
+                        byte[] packet = new byte[packetLenght];
                         //copy into local copy
-                        Buffer.BlockCopy(buffer, 0, localCopy, 0, packetLenght);
+                        Buffer.BlockCopy(buffer, 0, packet, 0, packetLenght);
                         //try to get packet
-                        SerialPacketControl tmpPacket = new SerialPacketControl(localCopy, packetLenght);
+                        SerialPacketControl tmpPacket = new SerialPacketControl(packet, packetLenght);
                         if (tmpPacket.isValid())
                         {
                             this._controllerPacketMutex.WaitOne();

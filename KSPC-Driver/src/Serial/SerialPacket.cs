@@ -35,7 +35,7 @@ namespace KSPCDriver.Serial
     public class SerialPacketControl
     {
         //
-        byte[] _payload;
+        private byte[] _payload;
         public SerialPacketControl(byte[] buff, int buffLen)
         {
             _payload = this._receiveBuffer(buff, buffLen);
@@ -64,7 +64,7 @@ namespace KSPCDriver.Serial
                         if (buff[x] == Definitions.PACKET_ACK) _readState = SerialPacketState.VERIFIER;
                         break;
                     case SerialPacketState.VERIFIER:
-                        if (buff[x] == 0xEF) _readState = SerialPacketState.SIZE; //proceed
+                        if (buff[x] == Definitions.PACKET_VERIFIER) _readState = SerialPacketState.SIZE; //proceed
                         else _readState = SerialPacketState.ACK; //verifier failed, get back to ack
                         break;
                     case SerialPacketState.SIZE:
@@ -87,6 +87,7 @@ namespace KSPCDriver.Serial
                         break;
                 }
             }
+            Utils.PrintDebugMessage("Failing on " +  _readState.ToString());
             //fail return null
             return null;
         }
