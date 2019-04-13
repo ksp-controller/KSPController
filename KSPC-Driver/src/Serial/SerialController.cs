@@ -1,4 +1,5 @@
 ﻿using System;
+using KSPCDriver.KSPBridge;
 using KSPCDriver.Serial;
 
 namespace KSPCDriver.Serial
@@ -26,16 +27,16 @@ namespace KSPCDriver.Serial
             }
             else Utils.PrintScreenMessage("Cant find controller.");
         }
-        public void sendVesselData(object vData)
+        public void sendVesselData(VesselData? vData)
         {
             if (vData != null)
             {
                 this._currentConnection.sendData((VesselData)vData);
             }
-            else
-            {
-                Utils.PrintDebugMessage("set NULL vessel data!");
-            }
+        }
+        public void updateState(KSPStateMachine state)
+        {
+            this._currentConnection.updateState(state);
         }
         public void close()
         {

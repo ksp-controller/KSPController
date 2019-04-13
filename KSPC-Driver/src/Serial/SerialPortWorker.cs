@@ -38,12 +38,15 @@ namespace KSPCDriver.Serial
             _outThread.Interrupt();
             _outThread = null;
         }
-        public object getLastControlRead()
+        public VesselControls? getLastControlRead()
         {
-            if (!this.keepAlive) return null;
-            object tmpRetValue;
             this._controllerPacketMutex.WaitOne();
-            tmpRetValue = _lastControllerPacket.parsedData();
+            if (this.keepAlive == false || _lastControllerPacket == null)
+            {
+                this._controllerPacketMutex.ReleaseMutex();
+                return null;
+            }
+            VesselControls? tmpRetValue = _lastControllerPacket.parsedData();
             this._controllerPacketMutex.ReleaseMutex();
             return tmpRetValue;
         }
@@ -100,19 +103,24 @@ namespace KSPCDriver.Serial
                             break;
                         case SerialPacketState.CHECKSUM:
                                 {
-                                   if (Utils.packetChecksum(_readPayload, _currReadDone) == (byte)_read)
+                                   if (Utils.packetChecksum(_readPayload, _currReadSize) == (byte)_read)
                                     {
-                                        this._controllerPacketMutex.WaitOne(); //possible dead lock here, should use try catch to do all the sutff below
+                                        
                                         //get safe pointer for game thread usage!
                                         byte[] _localPacket = new byte[Definitions.MAX_PACKET_SIZE];
-                                        Buffer.BlockCopy(_localPacket, 0, _readPayload, 0, _currReadSize);
-                                        SerialPacketControl tmpPacket = new SerialPacketControl(_localPacket);
+                                        Buffer.BlockCopy(_readPayload, 0, _localPacket, 0, _currReadSize);
+                                        SerialPacketControl tmpPacket = new SerialPacketControl(_localPacket, _currReadSize);
                                         //Check for validity
-                                        if (tmpPacket.isValid()) this._lastControllerPacket = tmpPacket;
-                                        else Utils.PrintDebugMessage("[ARDUINO]:: " + System.Text.Encoding.UTF8.GetString(_readPayload, 0, _currReadDone));
+                                        if (tmpPacket.isValid())
+                                        {
+                                            this._controllerPacketMutex.WaitOne(); 
+                                            this._lastControllerPacket = tmpPacket;
+                                            this._controllerPacketMutex.ReleaseMutex();
+                                        }
+                                        else Utils.PrintDebugMessage("[ARDUINO]:: " + System.Text.Encoding.UTF8.GetString(_readPayload, 0, _currReadSize));
                                         //mark as done to allow next packet recieve
                                         _readState = SerialPacketState.DONE;
-                                        this._controllerPacketMutex.ReleaseMutex();
+                                        
                                     }
                                     else
                                     {
@@ -130,7 +138,6 @@ namespace KSPCDriver.Serial
                         _currReadDone = 0; //current packet already read
                         Array.Clear(_readPayload, 0, _readPayload.Length);
                         _readState = SerialPacketState.ACK;
-                        Thread.Sleep((int)Definitions.SERIAL_THREAD_FREQUENCY); //sleep for next packet
                     }
                 }
             }
@@ -144,7 +151,7 @@ namespace KSPCDriver.Serial
         private void _sendPacket()
         {
             this._sendPacketMutex.WaitOne();
-            if (this._sendData != null)
+            if (this._sendData != null && this._stream.CanWrite)
             {
                 //Utils.PrintDebugMessage("TX!");
                 this._stream.Write(_sendData.getData(), 0, _sendData.getDataLength());

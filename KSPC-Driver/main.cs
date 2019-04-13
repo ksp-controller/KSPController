@@ -24,11 +24,11 @@ namespace KSPCDriver
         }
         void Update()
         {
-
             if (FlightGlobals.ActiveVessel != null)
             {
                if (_serialController != null && _serialController.isCommunicationAvailable())
                 {
+                    _serialController.updateState(_state);
                     _state.updateOnGameThread();
                     _serialController.sendVesselData(_state.getVesselData());
                 }

@@ -41,31 +41,31 @@ namespace KSPCDriver
             BaudRate = cfg.GetValue<int>("BaudRate");
             Utils.PrintDebugMessage("KSPCDriver: BaudRate = " + BaudRate.ToString());
 
-            PitchEnable = cfg.GetValue<bool>("PitchEnable");
+            PitchEnable = cfg.GetValue<int>("PitchEnable") == 1;
             Utils.PrintDebugMessage("KSPCDriver: Pitch Enable = " + PitchEnable.ToString());
 
-            RollEnable = cfg.GetValue<bool>("RollEnable");
+            RollEnable = cfg.GetValue<int>("RollEnable") == 1;
             Utils.PrintDebugMessage("KSPCDriver: Roll Enable = " + RollEnable.ToString());
 
-            YawEnable = cfg.GetValue<bool>("YawEnable");
+            YawEnable = cfg.GetValue<int>("YawEnable") == 1;
             Utils.PrintDebugMessage("KSPCDriver: Yaw Enable = " + YawEnable.ToString());
 
-            TXEnable = cfg.GetValue<bool>("TXEnable");
+            TXEnable = cfg.GetValue<int>("TXEnable") == 1;
             Utils.PrintDebugMessage("KSPCDriver: Translate X Enable = " + TXEnable.ToString());
 
-            TYEnable = cfg.GetValue<bool>("TYEnable");
+            TYEnable = cfg.GetValue<int>("TYEnable") == 1;
             Utils.PrintDebugMessage("KSPCDriver: Translate Y Enable = " + TYEnable.ToString());
 
-            TZEnable = cfg.GetValue<bool>("TZEnable");
+            TZEnable = cfg.GetValue<int>("TZEnable") == 1;
             Utils.PrintDebugMessage("KSPCDriver: Translate Z Enable = " + TZEnable.ToString());
 
-            WheelSteerEnable = cfg.GetValue<bool>("WheelSteerEnable");
+            WheelSteerEnable = cfg.GetValue<int>("WheelSteerEnable") == 1;
             Utils.PrintDebugMessage("KSPCDriver: Wheel Steering Enable = " + WheelSteerEnable.ToString());
 
-            ThrottleEnable = cfg.GetValue<bool>("ThrottleEnable");
+            ThrottleEnable = cfg.GetValue<int>("ThrottleEnable") == 1;
             Utils.PrintDebugMessage("KSPCDriver: Throttle Enable = " + ThrottleEnable.ToString());
 
-            WheelThrottleEnable = cfg.GetValue<bool>("WheelThrottleEnable");
+            WheelThrottleEnable = cfg.GetValue<int>("WheelThrottleEnable") == 1;
             Utils.PrintDebugMessage("KSPCDriver: Wheel Throttle Enable = " + WheelThrottleEnable.ToString());
 
             SASTol = cfg.GetValue<double>("SASTol");

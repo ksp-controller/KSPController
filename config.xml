@@ -2,14 +2,14 @@
 <config>
   <string name="DefaultPort">/dev/cu.usbmodem141101</string>
   <int name="BaudRate">57600</int>
-  <bool name="ThrottleEnable">true</bool>
-  <bool name="PitchEnable">true</bool>
-  <bool name="RollEnable">true</bool>
-  <bool name="YawEnable">true</bool>
-  <bool name="TXEnable">true</bool>
-  <bool name="TYEnable">true</bool>
-  <bool name="TZEnable">true</bool>
-  <bool name="WheelSteerEnable">true</bool>
-  <bool name="WheelThrottleEnable">true</bool>
+  <int name="ThrottleEnable">1</int>
+  <int name="PitchEnable">1</int>
+  <int name="RollEnable">1</int>
+  <int name="YawEnable">1</int>
+  <int name="TXEnable">1</int>
+  <int name="TYEnable">1</int>
+  <int name="TZEnable">1</int>
+  <int name="WheelSteerEnable">1</int>
+  <int name="WheelThrottleEnable">1</int>
   <double name="SASTol">0.1</double>
 </config>

@@ -138,33 +138,33 @@ namespace KSPCDriver.KSPBridge
     
         public static void SetControllerOnVessel(VesselControls controls, VesselControls previousControls, Vessel vessel)
         {
-            _setValueIfDiffer(controls.RCS, previousControls.RCS, vessel, KSPActionGroup.RCS);
-            _setValueIfDiffer(controls.SAS, previousControls.SAS, vessel, KSPActionGroup.SAS);
-            _setValueIfDiffer(controls.Light, previousControls.Light, vessel, KSPActionGroup.Light);
-            _setValueIfDiffer(controls.Brakes, previousControls.Brakes, vessel, KSPActionGroup.Brakes);
-            _setValueIfDiffer(controls.Abort, previousControls.Abort, vessel, KSPActionGroup.Abort);
-            _setValueIfDiffer(controls.Stage, previousControls.Stage, vessel, KSPActionGroup.Stage);
-            _setSASModeIfDiffer(controls.SASMode, previousControls.SASMode, vessel);
-            _setSpeedDisplayModeIfDiffer(controls.SpeedMode, previousControls.SpeedMode, vessel);
-            _disableSASIfNeeded(controls, vessel);
+            //_setValueIfDiffer(controls.RCS, previousControls.RCS, vessel, KSPActionGroup.RCS);
+            //_setValueIfDiffer(controls.SAS, previousControls.SAS, vessel, KSPActionGroup.SAS);
+            //_setValueIfDiffer(controls.Light, previousControls.Light, vessel, KSPActionGroup.Light);
+            //_setValueIfDiffer(controls.Brakes, previousControls.Brakes, vessel, KSPActionGroup.Brakes);
+            //_setValueIfDiffer(controls.Abort, previousControls.Abort, vessel, KSPActionGroup.Abort);
+            //_setValueIfDiffer(controls.Stage, previousControls.Stage, vessel, KSPActionGroup.Stage);
+            //_setSASModeIfDiffer(controls.SASMode, previousControls.SASMode, vessel);
+            //_setSpeedDisplayModeIfDiffer(controls.SpeedMode, previousControls.SpeedMode, vessel);
+            //_disableSASIfNeeded(controls, vessel);
             //control groups
-            for (int x = 1; x < Definitions.CONTROL_GROUP_COUNT; x++)
-            {
-                //KSPActionGroup.Custom01 - 128 KSPActionGroup.Custom02 - 256...
-                _setValueIfDiffer(controls.ControlGroup[x], previousControls.ControlGroup[x], vessel, (KSPActionGroup)(128 * x));
-            }
+            //for (int x = 1; x < Definitions.CONTROL_GROUP_COUNT-1; x++)
+            //{
+            //    //KSPActionGroup.Custom01 - 128 KSPActionGroup.Custom02 - 256...
+            //    _setValueIfDiffer(controls.ControlGroup[x], previousControls.ControlGroup[x], vessel, (KSPActionGroup)(128 * x));
+            //}
         }
         public static void FillVesselStateWithController(FlightCtrlState vesselState, VesselControls control)
         {
             if (KSPCSettings.ThrottleEnable) vesselState.mainThrottle = control.Throttle;
-            if (KSPCSettings.PitchEnable) vesselState.pitch = control.Pitch;
-            if (KSPCSettings.RollEnable) vesselState.roll = control.Roll;
-            if (KSPCSettings.YawEnable) vesselState.yaw = control.Yaw;
-            if (KSPCSettings.TXEnable) vesselState.X = control.TX;
-            if (KSPCSettings.TYEnable) vesselState.Y = control.TY;
-            if (KSPCSettings.TZEnable) vesselState.Z = control.TZ;
-            if (KSPCSettings.WheelSteerEnable) vesselState.wheelSteer = control.WheelSteer;
-            if (KSPCSettings.WheelThrottleEnable) vesselState.wheelThrottle = control.WheelThrottle;
+            //if (KSPCSettings.PitchEnable) vesselState.pitch = control.Pitch;
+            //if (KSPCSettings.RollEnable) vesselState.roll = control.Roll;
+            //if (KSPCSettings.YawEnable) vesselState.yaw = control.Yaw;
+            //if (KSPCSettings.TXEnable) vesselState.X = control.TX;
+            //if (KSPCSettings.TYEnable) vesselState.Y = control.TY;
+            //if (KSPCSettings.TZEnable) vesselState.Z = control.TZ;
+            //if (KSPCSettings.WheelSteerEnable) vesselState.wheelSteer = control.WheelSteer;
+            //if (KSPCSettings.WheelThrottleEnable) vesselState.wheelThrottle = control.WheelThrottle;
         }
 
         //

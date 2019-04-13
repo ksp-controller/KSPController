@@ -36,48 +36,57 @@ namespace KSPCDriver.Serial
     {
         //
         private byte[] _payload;
-        public SerialPacketControl(byte[] buff)
+        private byte payloadLength;
+        public SerialPacketControl(byte[] buff, byte buffLength)
         {
             _payload = buff;
+            payloadLength = buffLength;
         }
         unsafe public bool isValid()
         {
-            return (this._payload.Length == sizeof(SerializedVesselControls));
+            return (payloadLength == sizeof(SerializedVesselControls));
         }
-        public object parsedData()
+        public VesselControls? parsedData()
         {
             return this._parsePayload();
         }
 
         //Parser
-        private object _parsePayload()
+        private VesselControls? _parsePayload()
         {
-            SerializedVesselControls _controlPacket = this._deserializePacketControl();
-            // 
-            VesselControls _control = new VesselControls();
-            _control.SAS = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 7);
-            _control.RCS = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 6);
-            _control.Light = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 5);
-            _control.Gear = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 4);
-            _control.Brakes = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 3);
-            _control.Abort = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 1);
-            _control.Stage = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 0);
-            _control.Pitch = (float)_controlPacket.Pitch / 1000.0F;
-            _control.Roll = (float)_controlPacket.Roll / 1000.0F;
-            _control.Yaw = (float)_controlPacket.Yaw / 1000.0F;
-            _control.TX = (float)_controlPacket.TX / 1000.0F;
-            _control.TY = (float)_controlPacket.TY / 1000.0F;
-            _control.TZ = (float)_controlPacket.TZ / 1000.0F;
-            _control.WheelSteer = (float)_controlPacket.WheelSteer / 1000.0F;
-            _control.Throttle = (float)_controlPacket.Throttle / 1000.0F;
-            _control.WheelThrottle = (float)_controlPacket.WheelThrottle / 1000.0F;
-            _control.SASMode = (int)_controlPacket.NavballSASMode & 0x0F;
-            _control.SpeedMode = (int)(_controlPacket.NavballSASMode >> 4);
-            for (int j = 1; j <= 10; j++)
+            try
             {
-                _control.ControlGroup[j] = Utils.BitMathUshort(_controlPacket.ControlGroup, j);
+                SerializedVesselControls _controlPacket = this._deserializePacketControl();
+                // 
+                VesselControls _control = new VesselControls();
+                _control.SAS = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 7);
+                _control.RCS = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 6);
+                _control.Light = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 5);
+                _control.Gear = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 4);
+                _control.Brakes = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 3);
+                _control.Abort = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 1);
+                _control.Stage = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 0);
+                _control.Pitch = (float)_controlPacket.Pitch / 1000.0F;
+                _control.Roll = (float)_controlPacket.Roll / 1000.0F;
+                _control.Yaw = (float)_controlPacket.Yaw / 1000.0F;
+                _control.TX = (float)_controlPacket.TX / 1000.0F;
+                _control.TY = (float)_controlPacket.TY / 1000.0F;
+                _control.TZ = (float)_controlPacket.TZ / 1000.0F;
+                _control.WheelSteer = (float)_controlPacket.WheelSteer / 1000.0F;
+                _control.Throttle = (float)_controlPacket.Throttle / 1000.0F;
+                _control.WheelThrottle = (float)_controlPacket.WheelThrottle / 1000.0F;
+                _control.SASMode = (int)_controlPacket.NavballSASMode & 0x0F;
+                _control.SpeedMode = (int)(_controlPacket.NavballSASMode >> 4);
+                for (int j = 1; j <= Definitions.CONTROL_GROUP_COUNT-1; j++)
+                {
+                    _control.ControlGroup[j] = Utils.BitMathUshort(_controlPacket.ControlGroup, j);
+                }
+                return _control;
+            } catch (Exception e)
+            {
+                Utils.PrintDebugMessage("Exception when decoding packet: " + e.ToString());
+                return null;
             }
-            return _control;
         }
         //
 
@@ -85,7 +94,7 @@ namespace KSPCDriver.Serial
         {
             SerializedVesselControls _controlPacket = new SerializedVesselControls();
             int len = Marshal.SizeOf(_controlPacket);
-            IntPtr i = Marshal.AllocHGlobal(Marshal.SizeOf(len));
+            IntPtr i = Marshal.AllocHGlobal(len);
             Marshal.Copy(_payload, 0, i, len);
             _controlPacket = (SerializedVesselControls)Marshal.PtrToStructure(i, _controlPacket.GetType());
             Marshal.FreeHGlobal(i);

@@ -45,10 +45,10 @@ namespace KSPCDriver.Serial
 
         public void updateState(KSPStateMachine state)
         {
-            object _tmp = this._worker.getLastControlRead();
+            VesselControls? _tmp = this._worker.getLastControlRead();
             if (_tmp != null)
             {
-                state.setControlRead((VesselControls)_tmp);
+                state.setControlRead(_tmp);
             }
         }
         public bool isPortOpen()
