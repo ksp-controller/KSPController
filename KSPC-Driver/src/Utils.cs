@@ -34,10 +34,10 @@ namespace KSPCDriver
         {
             return ((x >> n) & 1) == 1;
         }
-        public static byte packetChecksum(byte[] payload)
+        public static byte packetChecksum(byte[] payload, int length)
         {
-            byte verifier = (byte)payload.Length;
-            for (int i = 0; i < payload.Length; i++) verifier ^= payload[i];
+            byte verifier = (byte)length;
+            for (int i = 0; i < length; i++) verifier ^= payload[i];
             return verifier;
         }
 

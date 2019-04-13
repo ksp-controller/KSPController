@@ -40,9 +40,9 @@ namespace KSPCDriver.Serial
         {
             _payload = buff;
         }
-        public bool isValid()
+        unsafe public bool isValid()
         {
-            return (this._payload != null);
+            return (this._payload.Length == sizeof(SerializedVesselControls));
         }
         public object parsedData()
         {
@@ -112,7 +112,7 @@ namespace KSPCDriver.Serial
         {
             byte[] parsedData = Utils.StructureToByteArray(data);
             byte size = (byte)parsedData.Length;
-            byte checksum = Utils.packetChecksum(parsedData);
+            byte checksum = Utils.packetChecksum(parsedData, size);
             //payload
             byte[] packet = new byte[size + 4];
             parsedData.CopyTo(packet, 3);

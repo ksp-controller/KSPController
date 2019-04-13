@@ -1,18 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workbench ActiveDocument="KSPC-Driver/src/Serial/SerialPortWorker.cs">
     <Files>
-      <File FileName="KSPC-Driver/src/Serial/SerialPortWorker.cs" Line="75" Column="35" />
-      <File FileName="KSPC-Driver/src/Serial/SerialPacket.cs" Line="70" Column="38" />
-      <File FileName="KSPC-Driver/src/Serial/SerialController.cs" Line="33" Column="14" />
-      <File FileName="KSPC-Driver/src/Serial/SerialPort.cs" Line="1" Column="1" />
-      <File FileName="KSPC-Driver/main.cs" Line="25" Column="22" />
-      <File FileName="KSPC-Driver/src/KSPBridge/KSPStateMachine.cs" Line="38" Column="69" />
-      <File FileName="KSPC-Driver/src/KSPBridge/KSPVesselBridge.cs" Line="76" Column="25" />
-      <File FileName="KSPC-Driver/src/Definitions.cs" Line="1" Column="1" />
-      <File FileName="KSPC-Driver/src/Enums.cs" Line="12" Column="24" />
-      <File FileName="KSPC-Driver/src/Utils.cs" Line="11" Column="6" />
-      <File FileName="KSPC-Driver/src/Settings.cs" Line="7" Column="30" />
-      <File FileName="KSPC-Driver/src/USBDetector.cs" Line="29" Column="52" />
+      <File FileName="KSPC-Driver/main.cs" Line="1" Column="1" />
+      <File FileName="KSPC-Driver/src/Serial/SerialPortWorker.cs" Line="120" Column="95" />
+      <File FileName="KSPC-Driver/src/Serial/SerialPacket.cs" Line="45" Column="21" />
+      <File FileName="KSPC-Driver/src/Serial/SerialController.cs" Line="1" Column="1" />
+      <File FileName="KSPC-Driver/src/Serial/SerialPort.cs" Line="60" Column="10" />
+      <File FileName="KSPC-Driver/src/Utils.cs" Line="37" Column="28" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
