@@ -77,10 +77,10 @@ namespace KSPCDriver.Serial
                 _control.WheelThrottle = (float)_controlPacket.WheelThrottle / 1000.0F;
                 _control.SASMode = (int)_controlPacket.NavballSASMode & 0x0F;
                 _control.SpeedMode = (int)(_controlPacket.NavballSASMode >> 4);
-                for (int j = 1; j <= Definitions.CONTROL_GROUP_COUNT-1; j++)
-                {
-                    _control.ControlGroup[j] = Utils.BitMathUshort(_controlPacket.ControlGroup, j);
-                }
+                //for (int j = 1; j <= Definitions.CONTROL_GROUP_COUNT-1; j++)
+                //{
+                //    _control.ControlGroup[j] = Utils.BitMathUshort(_controlPacket.ControlGroup, j);
+                //}
                 return _control;
             } catch (Exception e)
             {
