@@ -1,27 +1,16 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="KSPC-Driver/src/KSPBridge/KSPVesselBridge.cs">
-    <Files>
-      <File FileName="KSPC-Driver/main.cs" Line="31" Column="21" />
-      <File FileName="KSPC-Driver/src/Serial/SerialPortWorker.cs" Line="151" Column="30" />
-      <File FileName="KSPC-Driver/src/Serial/SerialController.cs" Line="35" Column="14" />
-      <File FileName="KSPC-Driver/src/Serial/SerialPacket.cs" Line="75" Column="82" />
-      <File FileName="KSPC-Driver/src/Definitions.cs" Line="10" Column="55" />
-      <File FileName="KSPC-Driver/src/Settings.cs" Line="67" Column="1" />
-      <File FileName="KSPC-Driver/src/Serial/SerialPort.cs" Line="47" Column="10" />
-      <File FileName="KSPC-Driver/src/KSPBridge/KSPStateMachine.cs" Line="18" Column="21" />
-      <File FileName="KSPC-Driver/src/KSPBridge/KSPVesselBridge.cs" Line="158" Column="10" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="KSPC-Driver" expanded="True">
             <Node name="KSPC-Driver" expanded="True">
+              <Node name="Properties" expanded="True" />
               <Node name="src" expanded="True">
-                <Node name="KSPBridge" expanded="True">
-                  <Node name="KSPVesselBridge.cs" selected="True" />
-                </Node>
+                <Node name="KSPBridge" expanded="True" />
                 <Node name="Serial" expanded="True" />
               </Node>
+              <Node name="main.cs" selected="True" />
             </Node>
           </Node>
         </State>

@@ -59,13 +59,13 @@ namespace KSPCDriver.Serial
                 SerializedVesselControls _controlPacket = this._deserializePacketControl();
                 // 
                 VesselControls _control = new VesselControls();
-                _control.SAS = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 7);
-                _control.RCS = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 6);
-                _control.Light = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 5);
-                _control.Gear = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 4);
-                _control.Brakes = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 3);
-                _control.Abort = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 1);
-                _control.Stage = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 0);
+                _control.SAS = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 0);
+                _control.RCS = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 1);
+                _control.Light = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 2);
+                _control.Gear = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 3);
+                _control.Brakes = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 4);
+                _control.Abort = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 5);
+                _control.Stage = Utils.GetBooleanFromByteAt(_controlPacket.MainControls, 6);
                 _control.Pitch = (float)_controlPacket.Pitch / 1000.0F;
                 _control.Roll = (float)_controlPacket.Roll / 1000.0F;
                 _control.Yaw = (float)_controlPacket.Yaw / 1000.0F;

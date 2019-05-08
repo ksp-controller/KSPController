@@ -6,10 +6,10 @@
   <int name="PitchEnable">1</int>
   <int name="RollEnable">1</int>
   <int name="YawEnable">1</int>
-  <int name="TXEnable">1</int>
-  <int name="TYEnable">1</int>
-  <int name="TZEnable">1</int>
-  <int name="WheelSteerEnable">1</int>
-  <int name="WheelThrottleEnable">1</int>
-  <double name="SASTol">0.1</double>
+  <int name="TXEnable">0</int>
+  <int name="TYEnable">0</int>
+  <int name="TZEnable">0</int>
+  <int name="WheelSteerEnable">0</int>
+  <int name="WheelThrottleEnable">0</int>
+  <double name="SASTol">5</double>
 </config>

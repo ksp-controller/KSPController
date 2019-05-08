@@ -139,6 +139,7 @@ namespace KSPCDriver.Serial
                         Array.Clear(_readPayload, 0, _readPayload.Length);
                         _readState = SerialPacketState.ACK;
                     }
+
                 }
             }
             catch (InvalidOperationException exception)
